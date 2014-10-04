@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3ACFB08F-3843-4CCB-99C2-01EDB09DEE26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0D3CD3B1-F52B-4119-BBDE-2894B8E31562}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{3AF4475B-1102-4D4F-8FC7-6A1C96AC2584}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Fluency.Extensions.Examples", "examples\CSharp.Fluency.Extensions.Examples.csproj", "{2A9595D9-338F-4D0C-9F43-3BA06428159F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Fluency.Extensions.Tests", "tests\CSharp.Fluency.Extensions.Tests\CSharp.Fluency.Extensions.Tests.csproj", "{AD50E330-AC24-4609-9AA1-E7A50DAE5C8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Fluency.Extensions", "src\CSharp.Fluency.Extensions\CSharp.Fluency.Extensions.csproj", "{0EBD3889-EF94-4CC0-BFF4-801C527F9429}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A9595D9-338F-4D0C-9F43-3BA06428159F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A9595D9-338F-4D0C-9F43-3BA06428159F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A9595D9-338F-4D0C-9F43-3BA06428159F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A9595D9-338F-4D0C-9F43-3BA06428159F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD50E330-AC24-4609-9AA1-E7A50DAE5C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD50E330-AC24-4609-9AA1-E7A50DAE5C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD50E330-AC24-4609-9AA1-E7A50DAE5C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD50E330-AC24-4609-9AA1-E7A50DAE5C8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EBD3889-EF94-4CC0-BFF4-801C527F9429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EBD3889-EF94-4CC0-BFF4-801C527F9429}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EBD3889-EF94-4CC0-BFF4-801C527F9429}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EBD3889-EF94-4CC0-BFF4-801C527F9429}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A9595D9-338F-4D0C-9F43-3BA06428159F} = {3AF4475B-1102-4D4F-8FC7-6A1C96AC2584}
+		{AD50E330-AC24-4609-9AA1-E7A50DAE5C8A} = {0D3CD3B1-F52B-4119-BBDE-2894B8E31562}
+		{0EBD3889-EF94-4CC0-BFF4-801C527F9429} = {3ACFB08F-3843-4CCB-99C2-01EDB09DEE26}
+	EndGlobalSection
+EndGlobal
