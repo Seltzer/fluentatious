@@ -40,6 +40,16 @@ namespace CSharp.Fluency.Extensions.Tests
                 elements => elements.Count() == 5 && elements.Select( (index, e) => { return index == e;  }).All(r => r), 
                 elements => elements.Reverse()));
         }
+
+
+        [Test]
+        public void IfNotNull()
+        {
+            Assert.AreEqual("dagnabbit", "dag".IfNotNull(str => str + "nabbit"));
+            Assert.Null("dag".IfNotNull<string, string>(_ => null));
+            Assert.Null(((string)null).IfNotNull<string, string>(_ => null));
+            Assert.Null(((string)null).IfNotNull(_ => "dagnabbit"));
+        }
     }
 
 }

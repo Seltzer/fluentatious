@@ -28,4 +28,22 @@
         }
     }
 
+
+    internal class A
+    {
+        internal B Broccoli { get; set; }
+    }
+
+
+    internal class B
+    {
+        internal C Carrot { get; set; }
+    }
+
+
+    internal class C
+    {
+        internal string Value { get; set; }
+    }
+
 }

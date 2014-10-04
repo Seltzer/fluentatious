@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CSharp.Fluency.Extensions.Utils;
 
 namespace CSharp.Fluency.Extensions.ObjectExt
 {
@@ -9,14 +8,12 @@ namespace CSharp.Fluency.Extensions.ObjectExt
     {
         internal static void Do()
         {
-            {
-                var input = new[] { "aaaa", "aaaaa", "adkdkdkdk", "sdfsdfsdf" };
-                const SortingCriteria sortingCriterion = SortingCriteria.Alphabetical;
-                const SortingDirection sortingDirection = SortingDirection.Ascending;
+            var input = new[] { "aaaa", "aaaaa", "adkdkdkdk", "sdfsdfsdf" };
+            const SortingCriteria sortingCriterion = SortingCriteria.Alphabetical;
+            const SortingDirection sortingDirection = SortingDirection.Ascending;
 
-                WithoutIf(input, sortingCriterion, sortingDirection);
-                WithIf(input, sortingCriterion, sortingDirection);
-            }
+            WithoutIf(input, sortingCriterion, sortingDirection);
+            WithIf(input, sortingCriterion, sortingDirection);
         }
 
 

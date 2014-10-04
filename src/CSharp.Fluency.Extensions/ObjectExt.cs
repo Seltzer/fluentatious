@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace CSharp.Fluency.Extensions
 {
@@ -43,6 +44,64 @@ namespace CSharp.Fluency.Extensions
                 throw new ArgumentNullException("transformFunc");
 
             return predicate(@this) ? transformFunc(@this) : @this;
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Pretty simple. If @this is not null, apply <see cref="func"/> to it and return the result. Otherwise return null.
+        /// </para>
+        /// </summary>
+        public static TReturn IfNotNull<T, TReturn>(this T @this, Func<T, TReturn> func)
+            where T : class
+            where TReturn : class
+        {
+            if (func == null)
+                throw new ArgumentNullException("func");
+
+            return @this != null ? func(@this) : null;
+        }
+
+        
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Called CastTo to disambiguate from <see cref="Enumerable.Cast{T}"/>Enumerable.Cast
+        /// </para>
+        /// </summary>
+        /// <exception cref="InvalidCastException"></exception>
+        public static T CastTo<T>(this object @this)
+        {
+            return (T) @this;
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// </summary>
+        public static T As<T>(this object @this)
+            where T : class
+        {
+            return @this as T;
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Similar to tap in Ruby / Underscore .JS.
+        /// </para>
+        /// </summary>
+        public static T Do<T>(this T @this, params Action<T>[] actions)
+        {
+            if (actions == null || !actions.Any())
+                throw new ArgumentOutOfRangeException("actions", "Must be non-empty");
+
+            foreach (var action in actions)
+                action(@this);
+
+            return @this;
         }
     }
 
