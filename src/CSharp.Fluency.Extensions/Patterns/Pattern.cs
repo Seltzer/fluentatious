@@ -100,22 +100,24 @@ namespace CSharp.Fluency.Extensions.Patterns
         public Pattern<TMatch, TResult> Break()
         {
             if (currentParentCase != null)
-                currentParentCase = currentParentCase.ParentCase;
+                currentParentCase = currentParentCase.Parent;
 
             return this;
         }
 
 
 
-        //public U ResolveFirstOrDefault()
-        //{
-        //    return dispatchMap.First(kvPair => kvPair.Key(subject)).Value;
-        //}
+        public TResult ResolveFirstOrDefault()
+        {
+            var matchingCase = cases.FirstOrDefault(c => c.AttemptToMatch(subject) != null);
+
+            return matchingCase != null ? matchingCase.Result : default(TResult);
+        }
 
 
         public TResult ResolveFirst()
         {
-            return cases.First(c => c.AttemptToMatch(subject) != null).Result;
+            return cases.Select(c => c.AttemptToMatch(subject)).First(c => c != null).Result;
         }
         
 

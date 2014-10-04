@@ -43,7 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ancillary.cs" />
-    <Compile Include="ObjectExtTests.cs" />
+    <Compile Include="Extensions\ObjectExtTests.cs" />
+    <Compile Include="Patterns\PatternTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
