@@ -103,6 +103,18 @@ namespace CSharp.Fluency.Extensions
 
             return @this;
         }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Takes @this and pipes it into func as an argument. Like a non-variadic apply with @this as the argument.
+        /// </para>
+        /// </summary>
+        public static TReturn Pipe<T, TReturn>(this T @this, Func<T, TReturn> func)
+        {
+            return func(@this);
+        }
     }
 
 }
