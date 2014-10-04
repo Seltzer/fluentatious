@@ -42,12 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObjectExt\DoExamples.cs" />
     <Compile Include="ObjectExt\PipeExamples.cs" />
     <Compile Include="ObjectExt\IfNotNullExamples.cs" />
     <Compile Include="ObjectExt\IfExamples.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AncillaryTypes.cs" />
+    <Compile Include="Ancillary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
