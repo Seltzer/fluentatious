@@ -7,10 +7,17 @@ namespace CSharp.Fluency.Extensions.Patterns
 
     class Case<T, U>
     {
-        internal readonly U Result;
-        internal Case<T, U> Parent;
+        internal int Depth
+        {
+            get { return 1 + (Parent != null ? Parent.Depth : 0); }
+        }
+
+        internal U Result { get; set; }
+        
+        internal Case<T, U> Parent { get; set; }
 
         readonly List<Case<T, U>> subCases = new List<Case<T, U>>();
+
         readonly Func<T, bool> predicate;
         
 

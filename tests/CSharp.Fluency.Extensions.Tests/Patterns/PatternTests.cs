@@ -33,6 +33,21 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
                 .Case(str => str.StartsWith("x"), 99)
                 .ResolveFirstOrDefault();
         }
+
+        
+        [TestCase("aaa", Result = 42)]
+        [TestCase("b", Result = 27)]
+        [TestCase("x", Result = 99)]
+        [TestCase("sdfsdf", Result = default(int))]
+        public int TestCaseThenSyntax(string input)
+        {
+            return Pattern<string, int>
+                .Match(input)
+                .Case(input == "aaa").Then(42)
+                .Case(input.StartsWith("b")).Then(27)
+                .Case(str => str.StartsWith("x")).Then(99)
+                .ResolveFirstOrDefault();
+        }
         
         
         [Test]
@@ -82,7 +97,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
         [TestCase("cat bengal", Result = "bengal.png")]
         [TestCase("fish tetra", Result = "tetra.png")]
         [TestCase("tetra", ExpectedException = typeof(InvalidOperationException))]
-        public string Subcases_SimpleTest(string input)
+        public string Subcases_BreakSyntax_SimpleTest(string input)
         {
             return Pattern<string, string>
                 .Match(input)
@@ -107,7 +122,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
         [TestCase("tetra", Result = "generic-animal.png")]
         [TestCase("poodle dog", Result = "generic-animal.png")]
         [TestCase("octopus", Result = "generic-animal.png")]
-        public string Subcases_WithDefaults(string input)
+        public string Subcases_BreakSyntax_WithDefaults(string input)
         {
             return Pattern<string, string>
                 .Match(input)
@@ -134,7 +149,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
         
         [TestCase("catfish", Result = "catfish.png")]
         [TestCase("doge cat", Result = "dogecat.png")]
-        public string Subcases_NonDistinct(string input)
+        public string Subcases_BreakSyntax_NonDistinct(string input)
         {
             return Pattern<string, string>
                 .Match(input)
@@ -153,6 +168,102 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
                     .Case(input.Contains("doge"), "dogecat.png")
                     .Break()
                 .Default("generic-animal.png")
+                .ResolveFirst();
+        }
+
+
+        [TestCase("dog", Result = "dog.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("fish tetra", Result = "tetra.png")]
+        [TestCase("tetra", ExpectedException = typeof(InvalidOperationException))]
+        [TestCase("cat siamese", Result = "siamese.png")]
+        public string Subcases_BreakSyntax_WithCaseThenSyntax(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .Case(input.Contains("cat"))
+                    .Case(input.Contains("manx"), "manx.png")
+                    .Case(input.Contains("siamese")).Then("siamese.png")
+                    .Case(input.Contains("bengal"), "bengal.png")
+                    .Break()
+                .Case(input.Contains("dog"), "dog.png")
+                .Case(input.Contains("fish"))
+                    .Case(input.Contains("tetra")).Then("tetra.png")
+                    .Case(input.Contains("gourami"), "gourami.png")
+                    .Break()
+                .ResolveFirst();
+        }
+        
+        
+        [TestCase("cat bengal", Result = "bengal.png")]
+        public string Subcases_ExplicitSyntax_SimpleTest(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .Case(input.Contains("cat"))
+                    .SubCase(input.Contains("manx"), "manx.png")
+                    .SubCase(input.Contains("siamese"), "siamese.png")
+                    .SubCase(input.Contains("bengal"), "bengal.png")
+                .ResolveFirst();
+        }
+        
+
+        [TestCase("dog", Result = "dog.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        public string Subcases_ExplicitSyntax_ComplexTest(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .Case(input.Contains("cat"))
+                    .SubCase(input.Contains("manx"), "manx.png")
+                    .SubCase(input.Contains("siamese"), "siamese.png")
+                    .SubCase(input.Contains("bengal"), "bengal.png")
+                .Case(input.Contains("dog"), "dog.png")
+                .ResolveFirst();
+        }
+
+
+        [TestCase("dog", Result = "dog.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("cat manx", Result = "generic-manx.png")]
+        [TestCase("playful manx cat", Result = "playful-manx.png")]
+        [TestCase("angry manx cat", Result = "angry-manx.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        public string Subcases_ExplicitOpenCases(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .Case(input.Contains("cat"))
+                    .SubCase(input.Contains("manx"))
+                        .SubSubCase(input.Contains("playful"), "playful-manx.png")
+                        .SubSubCase(input.Contains("angry"), "angry-manx.png")
+                        .SubSubCase(input.Contains("morose"), "morose-manx.png")
+                        .Default("generic-manx.png")
+                    .SubCase(input.Contains("siamese"), "siamese.png")
+                    .SubCase(input.Contains("bengal"), "bengal.png")
+                .Case(input.Contains("dog"), "dog.png")
+                .ResolveFirst();
+        }
+
+
+          
+        [TestCase("dog", Result = "dog.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("fish tetra", Result = "tetra.png")]
+        [TestCase("tetra", ExpectedException = typeof(InvalidOperationException))]
+        public string Subcases_MixedSyntaxes(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .Case(input.Contains("cat"))
+                    .SubCase(input.Contains("manx"), "manx.png")
+                    .SubCase(input.Contains("siamese"), "siamese.png")
+                    .SubCase(input.Contains("bengal"), "bengal.png")
+                .Case(input.Contains("dog"), "dog.png")
+                .Case(input.Contains("fish"))
+                    .Case(input.Contains("tetra"), "tetra.png")
+                    .Case(input.Contains("gourami"), "gourami.png")
+                    .Break()
                 .ResolveFirst();
         }
     }

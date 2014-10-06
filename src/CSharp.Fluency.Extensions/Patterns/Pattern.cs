@@ -26,13 +26,29 @@ namespace CSharp.Fluency.Extensions.Patterns
     /// </example>
     public class Pattern<TMatch, TResult>
     {
+        /// <summary>
+        /// Subject of this pattern which is fed into predicates added by the user
+        /// </summary>
         readonly TMatch subject;
+
         readonly List<Case<TMatch, TResult>> cases = new List<Case<TMatch, TResult>>();
         
-        // Stack implicitly represented by currentParentCase and its parent case etc.
-        Case<TMatch, TResult> currentParentCase;
-        
+        /// <summary>
+        /// This is assigned whenever a user adds an 'open' case, one which has a predicate but no result. An open case
+        /// is a precursor either to a <see cref="Then"/> call or to a series of subcases.
+        ///  
+        /// <remarks>
+        /// An open case and its ancestors implicitly represent a stack which we're deliberately not using for performance reasons.
+        /// </remarks> 
+        /// </summary>
+        Case<TMatch, TResult> openCase;
 
+        /// <summary>
+        /// Is true if the caller is using explicit case syntax at the moment (i.e. SubCase/SubSubCase etc.)
+        /// </summary>
+        bool inExplicitCaseMode;
+        
+        
         Pattern(TMatch subject)
         {
             this.subject = subject;
@@ -47,7 +63,14 @@ namespace CSharp.Fluency.Extensions.Patterns
 
         public Pattern<TMatch, TResult> Case(Func<TMatch, bool> predicate, TResult result)
         {
-            AddCase(new Case<TMatch, TResult>(predicate, result));
+            int? intendedLevel = null;
+            if (inExplicitCaseMode)
+            {
+                intendedLevel = 1;
+                inExplicitCaseMode = false;
+            }
+
+            AddClosedCase(predicate, result, intendedLevel);
             
             return this;
         }
@@ -61,18 +84,15 @@ namespace CSharp.Fluency.Extensions.Patterns
 
         public Pattern<TMatch, TResult> Case(Func<TMatch, bool> predicate, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
         {
-            var newCase = new Case<TMatch, TResult>(predicate);
-
-            AddCase(newCase);
-
-            currentParentCase = newCase;
-
-            if (subCases != null)
+            int? intendedLevel = null;
+            if (inExplicitCaseMode)
             {
-                subCases(this);
-                Break();
+                intendedLevel = 1;
+                inExplicitCaseMode = false;
             }
 
+            AddOpenCase(predicate, subCases, intendedLevel);
+            
             return this;
         }
 
@@ -83,9 +103,80 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
-        public Pattern<TMatch, TResult> SubCase(Func<TMatch, bool> predicate, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases)
+        public Pattern<TMatch, TResult> SubCase(Func<TMatch, bool> predicate, TResult result)
         {
-            throw new NotImplementedException();
+            AddExplicitCase(2, "Syntax should be .Case(condition).SubCase(...)", "Can only subcase a top level case", 
+                () => AddClosedCase(predicate, result));
+            
+            return this;
+        }
+
+
+        public Pattern<TMatch, TResult> SubCase(bool matches, TResult result)
+        {
+            return SubCase(_ => matches, result);
+        }
+
+
+        public Pattern<TMatch, TResult> SubCase(Func<TMatch, bool> predicate, 
+            Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        {
+            AddExplicitCase(2, "Syntax should be .Case(condition).SubCase(...)", "Can only subcase a top level case", 
+                () => Case(predicate, subCases));
+
+            return this;
+        }
+
+
+        public Pattern<TMatch, TResult> SubCase(bool condition, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        {
+            return SubCase(_ => condition, subCases);
+        }
+
+
+
+        public Pattern<TMatch, TResult> SubSubCase(Func<TMatch, bool> predicate, TResult result)
+        {
+            AddExplicitCase(2, "Syntax should be .Case(condition).SubCase(condition).SubSubCase(...)", "Can only subsubcase a subcase", 
+                () => AddClosedCase(predicate, result));
+
+            return this;
+        }
+
+
+        public Pattern<TMatch, TResult> SubSubCase(bool matches, TResult result)
+        {
+            return SubCase(_ => matches, result);
+        }
+
+
+        public Pattern<TMatch, TResult> SubSubCase(Func<TMatch, bool> predicate, 
+            Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        {
+            AddExplicitCase(2, "Syntax should be .Case(condition).SubCase(condition).SubSubCase(...)", "Can only subsubcase a subcase", 
+                () => Case(predicate, subCases));
+
+            return this;
+        }
+
+
+        public Pattern<TMatch, TResult> SubSubCase(bool condition, 
+            Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        {
+            return SubCase(_ => condition, subCases);
+        }
+
+
+        public Pattern<TMatch, TResult> Then(TResult result)
+        {
+            if (openCase == null)
+                throw new InvalidOperationException("Syntax should be .Case(condition).Then(result)");
+
+            openCase.Result = result;
+
+            CloseCase();
+
+            return this;
         }
 
 
@@ -99,8 +190,7 @@ namespace CSharp.Fluency.Extensions.Patterns
 
         public Pattern<TMatch, TResult> Break()
         {
-            if (currentParentCase != null)
-                currentParentCase = currentParentCase.Parent;
+            CloseCase();
 
             return this;
         }
@@ -119,14 +209,63 @@ namespace CSharp.Fluency.Extensions.Patterns
         {
             return cases.Select(c => c.AttemptToMatch(subject)).First(c => c != null).Result;
         }
-        
 
-        void AddCase(Case<TMatch, TResult> newCase)
+        
+        void AddExplicitCase(int depth, string noOpenCaseError, string openCaseIsWrongDepthError, Action action)
         {
-            if (currentParentCase != null)
-                currentParentCase.AddSubCase(newCase);
+            if (openCase == null)
+                throw new InvalidOperationException(noOpenCaseError);
+
+            if (openCase.Depth != depth - 1)
+                throw new InvalidOperationException(openCaseIsWrongDepthError);
+
+            inExplicitCaseMode = true;
+
+            action();
+        }
+
+        
+        void AddOpenCase(Func<TMatch, bool> predicate, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null,
+            int? intendedLevel = null)
+        {
+            var newCase = new Case<TMatch, TResult>(predicate);
+
+            AddCase(newCase, intendedLevel);
+
+            openCase = newCase;
+
+            if (subCases != null)
+            {
+                subCases(this);
+                Break();
+            }
+        }
+
+
+        void AddClosedCase(Func<TMatch, bool> predicate, TResult result, int? intendedLevel = null)
+        {
+            var newCase = new Case<TMatch, TResult>(predicate, result);
+
+            AddCase(newCase, intendedLevel);
+        }
+        
+        
+        void AddCase(Case<TMatch, TResult> newCase, int? intendedLevel = null)
+        {
+            if (intendedLevel.HasValue && openCase != null && openCase.Depth == intendedLevel.Value)
+                Break();
+            
+            if (openCase != null)
+                openCase.AddSubCase(newCase);
             else
                 cases.Add(newCase);
+        }
+
+
+        void CloseCase()
+        {
+             if (openCase != null)
+                openCase = openCase.Parent;
         }
     }
 
