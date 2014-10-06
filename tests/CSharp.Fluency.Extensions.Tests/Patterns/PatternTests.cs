@@ -313,7 +313,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
             return Pattern<string, string>
                 .Match(input)
                 .Case(input.Contains("cat"))
-                    .SubCase(input.Contains("manx"), "manx.png")
+                    .SubCase(input.Contains("manx")).Then("manx.png")
                     .SubCase(input.Contains("siamese"), "siamese.png")
                     .SubCase(input.Contains("bengal"), "bengal.png")
                 .Case(input.Contains("dog"), "dog.png")

@@ -1,30 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharp.Fluency.Extensions.Patterns
 {
 
-    /// <summary>
-    /// TODO: Add switch/case groups
-    /// TODO: Compare with if/else branches
-    /// TODO: Compare with Dictionary syntax
-    /// </summary>
-    /// <typeparam name="TMatch"></typeparam>
-    /// <typeparam name="TResult"></typeparam>
-    /// <example>
-    ///  string result = Pattern{SPWeb, string}
-    ///         .Match(guidanceElementWeb)
-    ///         .Case(AdmHelper.IsInsideDesignThinking, "sdfsdf")
-    ///         .Case(AdmHelper.IsInsideProjectType, "sdfsdf")
-    ///         .Case(w => AdmHelper.IsInsideProjectType(w) && w.GetParentOrAncestor(3).Name == "neighbourhoods", "fff")
-    ///         .Case(AdmHelper.IsInsideDesignThinking, "sdfsdf")
-    ///         .Resolve();
-    /// 
-    /// </example>
-    public class Pattern<TMatch, TResult>
+    public class Pattern<TMatch, TResult> : IPattern<TMatch, TResult>
     {
         /// <summary>
         /// Subject of this pattern which is fed into predicates added by the user
@@ -55,13 +36,16 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
         
 
-        public static Pattern<TMatch, TResult> Match(TMatch subject)
+        /// <summary>
+        /// Entry point for using a Pattern
+        /// </summary>
+        public static IPattern<TMatch, TResult> Match(TMatch subject)
         {
             return new Pattern<TMatch, TResult>(subject);
         }
 
 
-        public Pattern<TMatch, TResult> Case(Func<TMatch, bool> predicate, TResult result)
+        public IPattern<TMatch, TResult> Case(Func<TMatch, bool> predicate, TResult result)
         {
             int? intendedLevel = null;
             if (inExplicitCaseMode)
@@ -76,13 +60,13 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
-        public Pattern<TMatch, TResult> Case(bool matches, TResult result)
+        public IPattern<TMatch, TResult> Case(bool matches, TResult result)
         {
             return Case(_ => matches, result);
         }
 
 
-        public Pattern<TMatch, TResult> Case(Func<TMatch, bool> predicate, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        public IPattern<TMatch, TResult> Case(Func<TMatch, bool> predicate, Func<IPattern<TMatch, TResult>, IPattern<TMatch, TResult>> subCases = null)
         {
             int? intendedLevel = null;
             if (inExplicitCaseMode)
@@ -97,13 +81,13 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
-        public Pattern<TMatch, TResult> Case(bool matches, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        public IPattern<TMatch, TResult> Case(bool matches, Func<IPattern<TMatch, TResult>, IPattern<TMatch, TResult>> subCases = null)
         {
             return Case(_ => matches, subCases);
         }
 
 
-        public Pattern<TMatch, TResult> SubCase(Func<TMatch, bool> predicate, TResult result)
+        public IPattern<TMatch, TResult> SubCase(Func<TMatch, bool> predicate, TResult result)
         {
             AddExplicitCase(() => AddClosedCase(predicate, result, 2));
             
@@ -111,8 +95,8 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
         
 
-        public Pattern<TMatch, TResult> SubCase(Func<TMatch, bool> predicate, 
-            Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        public IPattern<TMatch, TResult> SubCase(Func<TMatch, bool> predicate, 
+            Func<IPattern<TMatch, TResult>, IPattern<TMatch, TResult>> subCases = null)
         {
             AddExplicitCase(() => AddOpenCase(predicate, subCases, 2));
 
@@ -120,25 +104,25 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
-        public Pattern<TMatch, TResult> SubCase(bool matches, TResult result)
+        public IPattern<TMatch, TResult> SubCase(bool matches, TResult result)
         {
             return SubCase(_ => matches, result);
         }
 
 
-        public Pattern<TMatch, TResult> SubCase(bool condition, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        public IPattern<TMatch, TResult> SubCase(bool condition, Func<IPattern<TMatch, TResult>, IPattern<TMatch, TResult>> subCases = null)
         {
             return SubCase(_ => condition, subCases);
         }
 
 
-        public Pattern<TMatch, TResult> SubDefault(TResult result)
+        public IPattern<TMatch, TResult> SubDefault(TResult result)
         {
             return SubCase(true, result);
         }
 
 
-        public Pattern<TMatch, TResult> SubSubCase(Func<TMatch, bool> predicate, TResult result)
+        public IPattern<TMatch, TResult> SubSubCase(Func<TMatch, bool> predicate, TResult result)
         {
             AddExplicitCase(() => AddClosedCase(predicate, result, 3));
 
@@ -146,14 +130,14 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
-        public Pattern<TMatch, TResult> SubSubCase(bool matches, TResult result)
+        public IPattern<TMatch, TResult> SubSubCase(bool matches, TResult result)
         {
             return SubSubCase(_ => matches, result);
         }
 
 
-        public Pattern<TMatch, TResult> SubSubCase(Func<TMatch, bool> predicate, 
-            Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        public IPattern<TMatch, TResult> SubSubCase(Func<TMatch, bool> predicate, 
+            Func<IPattern<TMatch, TResult>, IPattern<TMatch, TResult>> subCases = null)
         {
             AddExplicitCase(() => AddOpenCase(predicate, subCases, 3));
 
@@ -161,21 +145,20 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
-        public Pattern<TMatch, TResult> SubSubCase(bool condition, 
-            Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null)
+        public IPattern<TMatch, TResult> SubSubCase(bool condition, Func<IPattern<TMatch, TResult>, IPattern<TMatch, TResult>> subCases = null)
         {
             return SubSubCase(_ => condition, subCases);
         }
 
 
-        public Pattern<TMatch, TResult> SubSubDefault(TResult result)
+        public IPattern<TMatch, TResult> SubSubDefault(TResult result)
         {
             return SubSubCase(true, result);
         }
 
 
 
-        public Pattern<TMatch, TResult> Then(TResult result)
+        public IPattern<TMatch, TResult> Then(TResult result)
         {
             if (openCase == null)
                 throw new InvalidOperationException("Syntax should be .Case(condition).Then(result)");
@@ -188,13 +171,13 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
-        public Pattern<TMatch, TResult> Default(TResult result)
+        public IPattern<TMatch, TResult> Default(TResult result)
         {
             return Case(true, result);
         }
 
 
-        public Pattern<TMatch, TResult> Break()
+        public IPattern<TMatch, TResult> Break()
         {
             CloseCase();
 
@@ -225,7 +208,7 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
         
-        void AddOpenCase(Func<TMatch, bool> predicate, Func<Pattern<TMatch, TResult>, Pattern<TMatch, TResult>> subCases = null,
+        void AddOpenCase(Func<TMatch, bool> predicate, Func<IPattern<TMatch, TResult>, IPattern<TMatch, TResult>> subCases = null,
             int? intendedLevel = null)
         {
             var newCase = new Case<TMatch, TResult>(predicate);
@@ -236,11 +219,8 @@ namespace CSharp.Fluency.Extensions.Patterns
 
             if (subCases != null)
             {
-                var pattern = new Pattern<TMatch, TResult>(subject).Pipe(subCases);
-
-                foreach (var c in pattern.cases)
-                    openCase.AddSubCase(c);
-
+                new Pattern<TMatch, TResult>(subject).Pipe(subCases).CastTo<Pattern<TMatch, TResult>>().cases.ForEach(openCase.AddSubCase);
+                
                 Break();
             }
         }

@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Extensions\ObjectExt.cs" />
     <Compile Include="Patterns\Case.cs" />
+    <Compile Include="Patterns\IPattern.cs" />
     <Compile Include="Patterns\Pattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
