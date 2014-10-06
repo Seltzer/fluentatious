@@ -225,7 +225,6 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
 
         [TestCase("dog", Result = "dog.png")]
         [TestCase("cat bengal", Result = "bengal.png")]
-        [TestCase("cat manx", Result = "generic-manx.png")]
         [TestCase("playful manx cat", Result = "playful-manx.png")]
         [TestCase("angry manx cat", Result = "angry-manx.png")]
         [TestCase("cat bengal", Result = "bengal.png")]
@@ -238,9 +237,62 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
                         .SubSubCase(input.Contains("playful"), "playful-manx.png")
                         .SubSubCase(input.Contains("angry"), "angry-manx.png")
                         .SubSubCase(input.Contains("morose"), "morose-manx.png")
-                        .Default("generic-manx.png")
                     .SubCase(input.Contains("siamese"), "siamese.png")
                     .SubCase(input.Contains("bengal"), "bengal.png")
+                .Case(input.Contains("dog"), "dog.png")
+                .ResolveFirst();
+        }
+
+
+        [TestCase("dog", Result = "dog.png")]
+        [TestCase("cat", Result = "generic-cat.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("cat manx", Result = "generic-manx.png")]
+        [TestCase("playful manx cat", Result = "playful-manx.png")]
+        [TestCase("angry manx cat", Result = "angry-manx.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("fish gourami", Result = "gourami.png")]
+        [TestCase("fish", Result = "generic-fish.png")]
+        [TestCase("octopus", Result = "generic-animal.png")]
+        public string Subcases_ExplicitDefaults(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .Case(input.Contains("cat"))
+                    .SubCase(input.Contains("manx"))
+                        .SubSubCase(input.Contains("playful"), "playful-manx.png")
+                        .SubSubCase(input.Contains("angry"), "angry-manx.png")
+                        .SubSubCase(input.Contains("morose"), "morose-manx.png")
+                        .SubSubDefault("generic-manx.png")
+                    .SubCase(input.Contains("siamese"), "siamese.png")
+                    .SubCase(input.Contains("bengal"), "bengal.png")
+                    .SubDefault("generic-cat.png")
+                .Case(input.Contains("dog"), "dog.png")
+                .Case(input.Contains("fish"))
+                    .SubCase(input.Contains("tetra"), "tetra.png")
+                    .SubCase(input.Contains("gourami"), "gourami.png")
+                    .SubDefault("generic-fish.png")
+                .Default("generic-animal.png")
+                .ResolveFirst();
+        }
+
+
+        [TestCase("dog", Result = "dog.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("playful manx cat", Result = "playful-manx.png")]
+        [TestCase("angry manx cat", Result = "angry-manx.png")]
+        [TestCase("cat bengal", Result = "bengal.png")]
+        public string Subcases_ExplicitCaseThenSyntax(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .Case(input.Contains("cat"))
+                    .SubCase(input.Contains("manx"))
+                        .SubSubCase(input.Contains("playful"), "playful-manx.png")
+                        .SubSubCase(input.Contains("angry")).Then("angry-manx.png")
+                        .SubSubCase(input.Contains("morose"), "morose-manx.png")
+                    .SubCase(input.Contains("siamese"), "siamese.png")
+                    .SubCase(input.Contains("bengal")).Then("bengal.png")
                 .Case(input.Contains("dog"), "dog.png")
                 .ResolveFirst();
         }
@@ -251,6 +303,11 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
         [TestCase("cat bengal", Result = "bengal.png")]
         [TestCase("fish tetra", Result = "tetra.png")]
         [TestCase("tetra", ExpectedException = typeof(InvalidOperationException))]
+        [TestCase("yellow bear", Result = "generic-bear.png")]
+        [TestCase("irate brown bear", Result = "generic-irate-brown-bear.png")]
+        [TestCase("fast irate brown bear", Result = "fast-irate-brown-bear.png")]
+        [TestCase("deadly irate brown bear", Result = "deadly-irate-brown-bear.png")]
+        [TestCase("super beta smart fast calm brown bear", Result = "super-beta-smart-fast-calm-brown-bear.png")]
         public string Subcases_MixedSyntaxes(string input)
         {
             return Pattern<string, string>
@@ -264,6 +321,28 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
                     .Case(input.Contains("tetra"), "tetra.png")
                     .Case(input.Contains("gourami"), "gourami.png")
                     .Break()
+                .Case(input.Contains("bear"))
+                    .SubCase(input.Contains("brown"))
+                        .SubSubCase(input.Contains("irate"), p => p
+                            .Case(input.Contains("fast"), "fast-irate-brown-bear.png")
+                            .Case(input.Contains("deadly"), "deadly-irate-brown-bear.png")
+                            .Default("generic-irate-brown-bear.png")
+                        )
+                        .SubSubCase(input.Contains("mild"), "mild-brown-bear.png")
+                        .SubSubCase(input.Contains("calm"), p => p
+                            .Case(input.Contains("fast"))
+                                .SubCase(input.Contains("smart"))
+                                    .SubSubCase(input.Contains("alpha"), "alpha-smart-fast-calm-brown-bear.png")
+                                    .SubSubCase(input.Contains("beta"), p2 => p2
+                                        .Case(input.Contains("super"), "super-beta-smart-fast-calm-brown-bear.png")
+                                        .Case(input.Contains("duper"), "duper-beta-smart-fast-calm-brown-bear.png"))
+                                    .SubSubDefault("generic-smart-fast-calm-brown-bear.png")
+                                .SubCase(input.Contains("dumb"), "dumb-fast-calm-brown-bear.png")
+                                .SubDefault("generic-fast-calm-brown-bear.png")
+                            .Case(input.Contains("deadly"), "deadly-calm-brown-bear.png")
+                            .Default("generic-calm-brown-bear.png"))
+                    .SubCase(input.Contains("black"), "black-bear.png")
+                    .SubDefault("generic-bear.png")
                 .ResolveFirst();
         }
     }
