@@ -37,6 +37,12 @@ namespace CSharp.Fluency.Extensions.Patterns
         bool inExplicitCaseMode;
 
 
+        /// <summary>
+        /// Assigned by <see cref="SetPredicate"/>
+        /// </summary>
+        Func<object, bool> predicate;
+
+
         Pattern(TSubject subject)
         {
             this.subject = subject;
@@ -87,6 +93,24 @@ namespace CSharp.Fluency.Extensions.Patterns
             return Case(_ => condition, subCases);
         }
 
+
+        public IPattern<TSubject, TResult> Case(object predicateArg, TResult result)
+        {
+            return Case(_ => predicate(predicateArg), result);
+        }
+
+
+        public IPattern<TSubject, TResult> Case(object predicateArg)
+        {
+            return Case((Func<TSubject, bool>) (_ => predicate(predicateArg)));
+        }
+
+
+        public IPattern<TSubject, TResult> Case(object predicateArg, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases)
+        {
+            return Case(_ => predicate(predicateArg), subCases);
+        }
+
           
         public IPattern<TSubject, TResult> Default(TResult result)
         {
@@ -131,6 +155,24 @@ namespace CSharp.Fluency.Extensions.Patterns
         public IPattern<TSubject, TResult> SubCase(bool condition, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases)
         {
             return SubCase(_ => condition, subCases);
+        }
+
+
+        public IPattern<TSubject, TResult> SubCase(object predicateArg, TResult result)
+        {
+            return SubCase(s => predicate(predicateArg), result);
+        }
+
+
+        public IPattern<TSubject, TResult> SubCase(object predicateArg)
+        {
+            return SubCase(s => predicate(predicateArg));
+        }
+
+
+        public IPattern<TSubject, TResult> SubCase(object predicateArg, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases)
+        {
+            return SubCase(_ => predicate(predicateArg), subCases);
         }
 
 
@@ -182,13 +224,36 @@ namespace CSharp.Fluency.Extensions.Patterns
         }
 
 
+        public IPattern<TSubject, TResult> SubSubCase(object predicateArg, TResult result)
+        {
+            return SubSubCase(_ => predicate(predicateArg), result);
+        }
+
+
+        public IPattern<TSubject, TResult> SubSubCase(object predicateArg)
+        {
+            return SubSubCase(_ => predicate(predicateArg));
+        }
+
+
+        public IPattern<TSubject, TResult> SubSubCase(object predicateArg, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases)
+        {
+            return SubSubCase(_ => predicate(predicateArg), subCases);
+        }
+
         public IPattern<TSubject, TResult> SubSubDefault(TResult result)
         {
             return SubSubCase(true, result);
         }
 
-
         #endregion
+
+
+        public IPattern<TSubject, TResult> SetPredicate(Func<object, bool> predicate)
+        {
+            this.predicate = predicate;
+            return this;
+        }
 
 
         public IPattern<TSubject, TResult> Then(TResult result)
@@ -281,7 +346,15 @@ namespace CSharp.Fluency.Extensions.Patterns
             if (subCases != null)
             {
                 // Apply subCases action to a new pattern, then absorb its generated subcases
-                new Pattern<TSubject, TResult>(subject).Pipe(subCases).CastTo<Pattern<TSubject, TResult>>().cases.ForEach(openCase.AddSubCase);
+                new Pattern<TSubject, TResult>(subject)
+                    .Pipe(subCases)
+                    .CastTo<Pattern<TSubject, TResult>>()
+                    // FIXME: Hackiness follows
+                    .Do(p =>
+                    {
+                        p.predicate = this.predicate;
+                    })
+                    .cases.ForEach(openCase.AddSubCase);
                 
                 Break();
             }

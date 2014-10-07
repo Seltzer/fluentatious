@@ -76,63 +76,62 @@ namespace CSharp.Fluency.Extensions.Patterns
 
         static string AdvancedPatternsExample(string input)
         {
-            Func<string, bool> contains = input.Contains;
-
             return Pattern<string, string>
                 .Match(input)
                 // Normal subcase case syntax using Case/Default/Break
-                .Case(contains("fish"))
-                    .Case(contains("tetra"), "tetra.png")
-                        .Case(contains("neon"), "neon-tetra.png")
-                        .Case(contains("blind cave"), "blind-cave-tetra.png")
+                .Case(input.Contains("fish"))
+                    .Case(input.Contains("tetra"), "tetra.png")
+                        .Case(input.Contains("neon"), "neon-tetra.png")
+                        .Case(input.Contains("blind cave"), "blind-cave-tetra.png")
                         // Results can also be specified using Case/Then syntax
-                        .Case(contains("glowlight")).Then("glowlight-tetra.png")
-                        .Case(contains("colombian"), "colombian-tetra.png")
+                        .Case(input.Contains("glowlight")).Then("glowlight-tetra.png")
+                        .Case(input.Contains("colombian"), "colombian-tetra.png")
                         // Default case
                         .Default("unidentified-swimming-tetra.png")
                         .Break()
                     // Subcases can also be specified via a lambda
-                    .Case(contains("gourami"), p => p
-                        .Case(contains("dwarf"), "dwarf-gourami.png")
-                        .Case(contains("pearl"), "pearl-gourami.png")
+                    .Case(input.Contains("gourami"), p => p
+                        .Case(input.Contains("dwarf"), "dwarf-gourami.png")
+                        .Case(input.Contains("pearl"), "pearl-gourami.png")
                     )
                     .Break()
+                // I'm sick of repeating 'input.Contains()' everywhere! So let's store a predicate so that we need only specify the keywords
+                .SetPredicate(substring => input.Contains((string)substring))
                 // Explicit subcase syntax
-                .Case(contains("cat"))
-                    .SubCase(contains("manx")).Then("manx.png")
-                    .SubCase(contains("siamese"), "siamese.png")
-                        .SubSubCase(contains("lynx"), "lynx.png")
+                .Case("cat")
+                    .SubCase("manx").Then("manx.png")
+                    .SubCase("siamese", "siamese.png")
+                        .SubSubCase("lynx", "lynx.png")
                         // Explicit subcase methods also support Case/Then syntax
-                        .SubSubCase(contains("lilac")).Then("lilac.png")
+                        .SubSubCase("lilac").Then("lilac.png")
                         .SubSubDefault("generic-siamese-cat.png")
                     // Lambda syntax for subcases can also supplemenent explicit subcases
-                    .SubCase(contains("bengal"), p => p
-                        .Case(contains("angry"), "angry-bengal-cat.png")
-                        .Case(contains("happy"), "happy-bengal-cat.png")
+                    .SubCase("bengal", p => p
+                        .Case("angry", "angry-bengal-cat.png")
+                        .Case("happy", "happy-bengal-cat.png")
                     )
-                .Case(contains("dog"), "dog.png")
-                .Case("ocelot", "ocelot.png")
-                .Case(contains("bear"))
-                    .SubCase(contains("brown"))
-                        .SubSubCase(contains("irate"), p => p
-                            .Case(contains("fast"), "fast-irate-brown-bear.png")
-                            .Case(contains("deadly"), "deadly-irate-brown-bear.png")
+                .Case("dog", "dog.png")
+                .Case("bear")
+                    .SubCase("brown")
+                        .SubSubCase("irate", p => p
+                            .Case("fast", "fast-irate-brown-bear.png")
+                            .Case("deadly", "deadly-irate-brown-bear.png")
                             .Default("generic-irate-brown-bear.png")
                         )
-                        .SubSubCase(contains("mild"), "mild-brown-bear.png")
-                        .SubSubCase(contains("calm"), p => p
-                            .Case(contains("fast"))
-                                .SubCase(contains("smart"))
-                                    .SubSubCase(contains("alpha"), "alpha-smart-fast-calm-brown-bear.png")
-                                    .SubSubCase(contains("beta"), p2 => p2
-                                        .Case(contains("super"), "super-beta-smart-fast-calm-brown-bear.png")
-                                        .Case(contains("duper"), "duper-beta-smart-fast-calm-brown-bear.png"))
+                        .SubSubCase("mild", "mild-brown-bear.png")
+                        .SubSubCase("calm", p => p
+                            .Case("fast")
+                                .SubCase("smart")
+                                    .SubSubCase("alpha", "alpha-smart-fast-calm-brown-bear.png")
+                                    .SubSubCase("beta", p2 => p2
+                                        .Case("super", "super-beta-smart-fast-calm-brown-bear.png")
+                                        .Case("duper", "duper-beta-smart-fast-calm-brown-bear.png"))
                                     .SubSubDefault("generic-smart-fast-calm-brown-bear.png")
-                                .SubCase(contains("dumb"), "dumb-fast-calm-brown-bear.png")
+                                .SubCase("dumb", "dumb-fast-calm-brown-bear.png")
                                 .SubDefault("generic-fast-calm-brown-bear.png")
-                            .Case(contains("deadly"), "deadly-calm-brown-bear.png")
+                            .Case("deadly", "deadly-calm-brown-bear.png")
                             .Default("generic-calm-brown-bear.png"))
-                    .SubCase(contains("black"), "black-bear.png")
+                    .SubCase("black", "black-bear.png")
                     .SubDefault("generic-bear.png")
                 .ResolveFirst();
         }  

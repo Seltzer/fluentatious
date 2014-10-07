@@ -33,6 +33,42 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
                 .Case(str => str.StartsWith("x"), 99)
                 .ResolveFirstOrDefault();
         }
+        
+        
+        [TestCase("terrier dog", Result = "terrier.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
+        [TestCase("cat", Result = "generic-cat.png")]
+        [TestCase("pearl gourami fish", Result = "pearl-gourami.png")]
+        [TestCase("tetra fish", Result = "tetra.png")]
+        [TestCase("tetra", Result = "generic-animal.png")]
+        [TestCase("poodle dog", Result = "generic-animal.png")]
+        [TestCase("octopus", Result = "generic-animal.png")]
+        public string SetPredicateTests(string input)
+        {
+            return Pattern<string, string>
+                .Match(input)
+                .SetPredicate(word => input.Contains((string)word))
+                .Case("cat")
+                    .Case("manx", "manx.png")
+                    .Case("siamese", "siamese.png")
+                    .Case("bengal", "bengal.png")
+                    .Default("generic-cat.png")
+                    .Break()
+                .Case(input.Contains("dog"))
+                    .Case(input.Contains("terrier"), "terrier.png")
+                    .Case(input.Contains("rottweiler"), "rottweiler.png")
+                    .Break()
+                .SetPredicate(word => input.Contains(((string)word).ToLowerInvariant()))
+                .Case("FISH")
+                    .Case("TETRA", "tetra.png")
+                    .Case("GOURAMI", p => p
+                        .Case("PEARL", "pearl-gourami.png"))
+                    .Default("generic-fish.png")
+                    .Break()
+                .Default("generic-animal.png")
+                .ResolveFirst();
+        }
+        
 
         
         [TestCase("aaa", Result = 42)]
@@ -91,7 +127,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
                 .Default(100)
                 .ResolveFirst();
         }
-
+        
 
         [TestCase("dog", Result = "dog.png")]
         [TestCase("bengal cat", Result = "bengal.png")]

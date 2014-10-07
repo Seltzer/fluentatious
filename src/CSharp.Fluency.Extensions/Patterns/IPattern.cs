@@ -4,6 +4,8 @@ namespace CSharp.Fluency.Extensions.Patterns
 {
     
     /// <summary>
+    /// WARNING: Experimental toy!
+    /// 
     /// An IPattern is created by calling <see cref="Pattern{TSubject, TResult}.Match"/> and passing in a subject. An IPattern is essentially
     /// a fluent substitute for a series of if/then statements or a switch statement, whose branches all conditionally assign different values to
     /// a local var. See the below example, or the usage examples elsewhere.
@@ -23,6 +25,9 @@ namespace CSharp.Fluency.Extensions.Patterns
     ///     - There are two different syntaxes for adding a predicate with an associated result
     ///         - .Case(condition).Then(result)
     ///         - .Case(condition, result)
+    ///     - SetPredicate/Case syntax allows you to store a parameterised predicate via the SetPredicate call and repeatedly probe it with varying 
+    ///       input via Case(). This is useful when you have a bunch of repetitive Case predicates which are practically identical aside from a 
+    ///       changing input
     /// </summary>
     /// <example>
     /// return Pattern{string, string}
@@ -63,6 +68,11 @@ namespace CSharp.Fluency.Extensions.Patterns
         IPattern<TSubject, TResult> Case(bool condition, TResult result);
         IPattern<TSubject, TResult> Case(bool condition);
         IPattern<TSubject, TResult> Case(bool condition, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases);
+      
+        // Companion methods to Using. predicateArg will be fed into a predicate you've already stored via <see cref="Using"/>
+        IPattern<TSubject, TResult> Case(object predicateArg, TResult result);
+        IPattern<TSubject, TResult> Case(object predicateArg);
+        IPattern<TSubject, TResult> Case(object predicateArg, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases);
      
         IPattern<TSubject, TResult> Default(TResult result);
 
@@ -72,6 +82,9 @@ namespace CSharp.Fluency.Extensions.Patterns
         IPattern<TSubject, TResult> SubCase(Func<TSubject, bool> predicate, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases);
         IPattern<TSubject, TResult> SubCase(bool matches, TResult result);
         IPattern<TSubject, TResult> SubCase(bool condition, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases = null);
+        IPattern<TSubject, TResult> SubCase(object predicateArg, TResult result);
+        IPattern<TSubject, TResult> SubCase(object predicateArg);
+        IPattern<TSubject, TResult> SubCase(object predicateArg, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases);
         IPattern<TSubject, TResult> SubDefault(TResult result);
         
         // Explicit subcase syntax
@@ -79,8 +92,17 @@ namespace CSharp.Fluency.Extensions.Patterns
         IPattern<TSubject, TResult> SubSubCase(bool matches, TResult result);
         IPattern<TSubject, TResult> SubSubCase(Func<TSubject, bool> predicate, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases = null);
         IPattern<TSubject, TResult> SubSubCase(bool condition, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases = null);
+        IPattern<TSubject, TResult> SubSubCase(object predicateArg, TResult result);
+        IPattern<TSubject, TResult> SubSubCase(object predicateArg);
+        IPattern<TSubject, TResult> SubSubCase(object predicateArg, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases);
         IPattern<TSubject, TResult> SubSubDefault(TResult result);
-        
+
+        /// <summary>
+        /// SetPredicate/Case syntax allows you to store a parameterised predicate via the Using call and repeatedly probe it with varying input via Case().
+        /// This is useful when you have a bunch of repetitive Case predicates which are practically identical aside from a changing input
+        /// </summary>
+        IPattern<TSubject, TResult> SetPredicate(Func<object, bool> predicate);
+
         /// <summary>
         /// Follows an open case
         /// </summary>

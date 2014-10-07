@@ -4,11 +4,12 @@ csharp-fluency-extensions
 TODO:
 
 * Patterns:
-    * Add some proper usage examples for Patterns
     * Wire up usage examples to main
+    * Error handling ain't great
     * Tests:
         * Add more. Particularly extremely complicated mixed syntax
-        * Tidy
+        * More 
+        
 * Do / Tap / Pipe:
     * Add Tap alias
     * Add 'expressiveness' tests
