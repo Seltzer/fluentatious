@@ -94,8 +94,8 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
 
 
         [TestCase("dog", Result = "dog.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
-        [TestCase("fish tetra", Result = "tetra.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
+        [TestCase("tetra fish", Result = "tetra.png")]
         [TestCase("tetra", ExpectedException = typeof(InvalidOperationException))]
         public string Subcases_BreakSyntax_SimpleTest(string input)
         {
@@ -115,10 +115,10 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
         }
 
 
-        [TestCase("dog terrier", Result = "terrier.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("terrier dog", Result = "terrier.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
         [TestCase("cat", Result = "generic-cat.png")]
-        [TestCase("fish tetra", Result = "tetra.png")]
+        [TestCase("tetra fish", Result = "tetra.png")]
         [TestCase("tetra", Result = "generic-animal.png")]
         [TestCase("poodle dog", Result = "generic-animal.png")]
         [TestCase("octopus", Result = "generic-animal.png")]
@@ -144,8 +144,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
                 .Default("generic-animal.png")
                 .ResolveFirst();
         }
-
-
+        
         
         [TestCase("catfish", Result = "catfish.png")]
         [TestCase("doge cat", Result = "dogecat.png")]
@@ -173,10 +172,10 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
 
 
         [TestCase("dog", Result = "dog.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
-        [TestCase("fish tetra", Result = "tetra.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
+        [TestCase("tetra fish", Result = "tetra.png")]
         [TestCase("tetra", ExpectedException = typeof(InvalidOperationException))]
-        [TestCase("cat siamese", Result = "siamese.png")]
+        [TestCase("siamese cat", Result = "siamese.png")]
         public string Subcases_BreakSyntax_WithCaseThenSyntax(string input)
         {
             return Pattern<string, string>
@@ -195,7 +194,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
         }
         
         
-        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
         public string Subcases_ExplicitSyntax_SimpleTest(string input)
         {
             return Pattern<string, string>
@@ -209,7 +208,7 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
         
 
         [TestCase("dog", Result = "dog.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
         public string Subcases_ExplicitSyntax_ComplexTest(string input)
         {
             return Pattern<string, string>
@@ -224,10 +223,10 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
 
 
         [TestCase("dog", Result = "dog.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
         [TestCase("playful manx cat", Result = "playful-manx.png")]
         [TestCase("angry manx cat", Result = "angry-manx.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
         public string Subcases_ExplicitOpenCases(string input)
         {
             return Pattern<string, string>
@@ -246,12 +245,12 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
 
         [TestCase("dog", Result = "dog.png")]
         [TestCase("cat", Result = "generic-cat.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
-        [TestCase("cat manx", Result = "generic-manx.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
+        [TestCase("manx cat", Result = "generic-manx.png")]
         [TestCase("playful manx cat", Result = "playful-manx.png")]
         [TestCase("angry manx cat", Result = "angry-manx.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
-        [TestCase("fish gourami", Result = "gourami.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
+        [TestCase("gourami fish", Result = "gourami.png")]
         [TestCase("fish", Result = "generic-fish.png")]
         [TestCase("octopus", Result = "generic-animal.png")]
         public string Subcases_ExplicitDefaults(string input)
@@ -278,10 +277,10 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
 
 
         [TestCase("dog", Result = "dog.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
         [TestCase("playful manx cat", Result = "playful-manx.png")]
         [TestCase("angry manx cat", Result = "angry-manx.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
         public string Subcases_ExplicitCaseThenSyntax(string input)
         {
             return Pattern<string, string>
@@ -300,8 +299,8 @@ namespace CSharp.Fluency.Extensions.Tests.Patterns
 
           
         [TestCase("dog", Result = "dog.png")]
-        [TestCase("cat bengal", Result = "bengal.png")]
-        [TestCase("fish tetra", Result = "tetra.png")]
+        [TestCase("bengal cat", Result = "bengal.png")]
+        [TestCase("tetra fish", Result = "tetra.png")]
         [TestCase("tetra", ExpectedException = typeof(InvalidOperationException))]
         [TestCase("yellow bear", Result = "generic-bear.png")]
         [TestCase("irate brown bear", Result = "generic-irate-brown-bear.png")]
