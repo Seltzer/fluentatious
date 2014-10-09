@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace CSharp.Fluency.Extensions
+namespace CSharp.Fluency.Extensions.Extensions
 {
 
     public static class ObjectExt
@@ -104,17 +104,84 @@ namespace CSharp.Fluency.Extensions
             return @this;
         }
 
+        #region Pipe methods
 
         /// <summary>
         /// Extension method
         /// <para>
-        /// Takes @this and pipes it into func as an argument. Like a non-variadic apply with @this as the argument.
+        /// Takes @this and pipes it into func as an argument. Like a non-variadic version of JavaScript apply with @this as the argument.
         /// </para>
         /// </summary>
         public static TReturn Pipe<T, TReturn>(this T @this, Func<T, TReturn> func)
         {
             return func(@this);
         }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="Pipe{T, TReturn}(T, Func{T, TReturn})"/> which takes two transforms.
+        /// </para>
+        /// </summary>
+        public static TReturn Pipe<T, TIntermediate1, TReturn>(this T @this, Func<T, TIntermediate1> transform1, 
+            Func<TIntermediate1, TReturn> transform2)
+        {
+            return @this.Pipe(transform1).Pipe(transform2);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="Pipe{T, TReturn}(T, Func{T, TReturn})"/> which takes three transforms.
+        /// </para>
+        /// </summary>
+        public static TReturn Pipe<T, TIntermediate1, TIntermediate2, TReturn>(
+            this T @this, 
+            Func<T, TIntermediate1> transform1, 
+            Func<TIntermediate1, TIntermediate2> transform2, 
+            Func<TIntermediate2, TReturn> transform3)
+        {
+            return @this.Pipe(transform1, transform2).Pipe(transform3);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="Pipe{T, TReturn}(T, Func{T, TReturn})"/> which takes four transforms.
+        /// </para>
+        /// </summary>
+        public static TReturn Pipe<T, TIntermediate1, TIntermediate2, TIntermediate3, TReturn>(
+            this T @this, 
+            Func<T, TIntermediate1> transform1, 
+            Func<TIntermediate1, TIntermediate2> transform2, 
+            Func<TIntermediate2, TIntermediate3> transform3, 
+            Func<TIntermediate3, TReturn> transform4)
+        {
+            return @this.Pipe(transform1, transform2, transform3).Pipe(transform4);
+        }
+
+        
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="Pipe{T, TReturn}(T, Func{T, TReturn})"/> which takes four transforms
+        /// </para>
+        /// </summary>
+        public static TReturn Pipe<T, TIntermediate1, TIntermediate2, TIntermediate3, TIntermediate4, TReturn>(
+            this T @this, 
+            Func<T, TIntermediate1> transform1, 
+            Func<TIntermediate1, TIntermediate2> transform2, 
+            Func<TIntermediate2, TIntermediate3> transform3, 
+            Func<TIntermediate3, TIntermediate4> transform4,
+            Func<TIntermediate4, TReturn> transform5)
+        {
+            return @this.Pipe(transform1, transform2, transform3, transform4).Pipe(transform5);
+        }
+
+        #endregion
     }
 
 }

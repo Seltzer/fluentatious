@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSharp.Fluency.Extensions.Extensions;
 using NUnit.Framework;
 
-namespace CSharp.Fluency.Extensions.Tests
+namespace CSharp.Fluency.Extensions.Tests.Extensions
 {
 
     class ObjectExtTests
@@ -62,6 +63,21 @@ namespace CSharp.Fluency.Extensions.Tests
             
             // The below will not compile if the call is ambiguous (e.g. if we had a Pipe overload which took an Action)
             Assert.AreEqual(4, 3.Pipe(Increment));
+        }
+
+
+        [Test]
+        public void Pipe_MultipleTransforms()
+        {
+            var input = new DateTime(17);
+
+            Func<DateTime, long> tr1 = dt => dt.Ticks % 10;
+            Func<long, string> tr2 = l => l.ToString();
+            Func<string, int> tr3 = int.Parse;
+            Func<int, DateTime> tr4 = i => new DateTime(i);
+            Func<DateTime, string> tr5 = dt => dt.ToShortDateString();
+            
+            Assert.AreEqual(new DateTime(7).ToShortDateString(), input.Pipe(tr1, tr2, tr3, tr4, tr5));
         }
 
 

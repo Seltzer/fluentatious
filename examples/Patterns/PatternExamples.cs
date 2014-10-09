@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSharp.Fluency.Extensions.Extensions;
 
 namespace CSharp.Fluency.Extensions.Patterns
 {

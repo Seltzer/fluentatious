@@ -1,4 +1,6 @@
-﻿namespace CSharp.Fluency.Extensions.ObjectExt
+﻿using CSharp.Fluency.Extensions.Extensions;
+
+namespace CSharp.Fluency.Extensions.ObjectExt
 {
     
     static class PipeExamples
@@ -24,6 +26,12 @@
                 .Pipe(str => SomeMethod("dhdhdh", str))
                 .Pipe(str => SomeMethod("catatatat", str))
                 .Pipe(Compute);
+        }
+
+
+        static void WithPipe2()
+        {
+            var blah = "horatio".Pipe(Bar, Foo, str => SomeMethod("dhdhdh", str), str => SomeMethod("catatatat", str), Compute);
         }
 
 

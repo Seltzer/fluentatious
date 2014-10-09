@@ -1,4 +1,5 @@
 ﻿using System;
+using CSharp.Fluency.Extensions.Extensions;
 using CSharp.Fluency.Extensions.Patterns;
 using NUnit.Framework;
 
