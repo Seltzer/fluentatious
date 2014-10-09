@@ -80,7 +80,7 @@ namespace CSharp.Fluency.Extensions.Patterns
                 .Match(input)
                 // Normal subcase case syntax using Case/Default/Break
                 .Case(input.Contains("fish"))
-                    .Case(input.Contains("tetra"), "tetra.png")
+                    .Case(input.Contains("tetra"))
                         .Case(input.Contains("neon"), "neon-tetra.png")
                         .Case(input.Contains("blind cave"), "blind-cave-tetra.png")
                         // Results can also be specified using Case/Then syntax
@@ -96,11 +96,11 @@ namespace CSharp.Fluency.Extensions.Patterns
                     )
                     .Break()
                 // I'm sick of repeating 'input.Contains()' everywhere! So let's store a predicate so that we need only specify the keywords
-                .SetPredicate(substring => input.Contains((string)substring))
+                .WithPredicate(substring => input.Contains((string)substring))
                 // Explicit subcase syntax
                 .Case("cat")
                     .SubCase("manx").Then("manx.png")
-                    .SubCase("siamese", "siamese.png")
+                    .SubCase("siamese")
                         .SubSubCase("lynx", "lynx.png")
                         // Explicit subcase methods also support Case/Then syntax
                         .SubSubCase("lilac").Then("lilac.png")

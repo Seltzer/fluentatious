@@ -38,7 +38,7 @@ namespace CSharp.Fluency.Extensions.Patterns
 
 
         /// <summary>
-        /// Assigned by <see cref="SetPredicate"/>
+        /// Assigned by <see cref="WithPredicate"/>
         /// </summary>
         Func<object, bool> predicate;
 
@@ -172,6 +172,9 @@ namespace CSharp.Fluency.Extensions.Patterns
 
         public IPattern<TSubject, TResult> SubCase(object predicateArg, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases)
         {
+            if (predicate == null)
+                throw new InvalidOperationException("No predicate is set");
+
             return SubCase(_ => predicate(predicateArg), subCases);
         }
 
@@ -249,9 +252,10 @@ namespace CSharp.Fluency.Extensions.Patterns
         #endregion
 
 
-        public IPattern<TSubject, TResult> SetPredicate(Func<object, bool> predicate)
+        public IPattern<TSubject, TResult> WithPredicate(Func<object, bool> predicate)
         {
             this.predicate = predicate;
+
             return this;
         }
 
@@ -334,8 +338,8 @@ namespace CSharp.Fluency.Extensions.Patterns
         /// <param name="intendedLevel">
         /// If this isn't specified, the case will be added as a subcase of the currently open case, or at the top level if no case is open.
         /// </param>
-        Pattern<TSubject, TResult> AddOpenCase(Func<TSubject, bool> predicate, Func<IPattern<TSubject, TResult>, IPattern<TSubject, TResult>> subCases = null,
-            int? intendedLevel = null)
+        Pattern<TSubject, TResult> AddOpenCase(Func<TSubject, bool> predicate, Func<IPattern<TSubject, TResult>, 
+            IPattern<TSubject, TResult>> subCases = null, int? intendedLevel = null)
         {
             var newCase = new Case<TSubject, TResult>(predicate);
 
@@ -347,13 +351,10 @@ namespace CSharp.Fluency.Extensions.Patterns
             {
                 // Apply subCases action to a new pattern, then absorb its generated subcases
                 new Pattern<TSubject, TResult>(subject)
+                    // FIXME: Hackiness follows
+                    .Do(p => p.WithPredicate(this.predicate))
                     .Pipe(subCases)
                     .CastTo<Pattern<TSubject, TResult>>()
-                    // FIXME: Hackiness follows
-                    .Do(p =>
-                    {
-                        p.predicate = this.predicate;
-                    })
                     .cases.ForEach(openCase.AddSubCase);
                 
                 Break();
