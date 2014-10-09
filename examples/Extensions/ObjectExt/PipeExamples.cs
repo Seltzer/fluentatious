@@ -1,6 +1,6 @@
 ﻿using CSharp.Fluency.Extensions.Extensions;
 
-namespace CSharp.Fluency.Extensions.ObjectExt
+namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
 {
     
     static class PipeExamples

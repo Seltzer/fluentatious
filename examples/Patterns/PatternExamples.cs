@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CSharp.Fluency.Extensions.Extensions;
+using CSharp.Fluency.Extensions.Patterns;
 
-namespace CSharp.Fluency.Extensions.Patterns
+namespace CSharp.Fluency.Extensions.Examples.Patterns
 {
 
     static class PatternExamples

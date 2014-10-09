@@ -90,7 +90,7 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// <summary>
         /// Extension method
         /// <para>
-        /// Similar to tap in Ruby / Underscore .JS.
+        /// Similar to tap in Ruby / Underscore .JS. Takes any number of actions, performs them sequentially on this, and then returns this.
         /// </para>
         /// </summary>
         public static T Do<T>(this T @this, params Action<T>[] actions)
@@ -103,6 +103,19 @@ namespace CSharp.Fluency.Extensions.Extensions
 
             return @this;
         }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Alias of <see cref="Do{T}"/>
+        /// </para>
+        /// </summary>
+        public static T Tap<T>(this T @this, params Action<T>[] actions)
+        {
+            return @this.Do(actions);
+        }
+
 
         #region Pipe methods
 

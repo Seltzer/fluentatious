@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CSharp.Fluency.Extensions.Extensions;
 
-namespace CSharp.Fluency.Extensions.ObjectExt
+namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
 {
     
     static class DoExamples
@@ -24,6 +24,7 @@ namespace CSharp.Fluency.Extensions.ObjectExt
                 .Sum(str => str.Length);
 
             Console.WriteLine(sum);
+            Console.Write(sum);
             
             return Math.Max(sum, 7);
         }
@@ -34,7 +35,7 @@ namespace CSharp.Fluency.Extensions.ObjectExt
             return input
                 .Select(i => i + i)
                 .Sum(str => str.Length)
-                .Do(Console.WriteLine)
+                .Do(Console.WriteLine, Console.Write)
                 .Pipe(i => Math.Max(i, 7));
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace CSharp.Fluency.Extensions
+﻿namespace CSharp.Fluency.Extensions.Examples
 {
 
     internal enum SortingCriteria
