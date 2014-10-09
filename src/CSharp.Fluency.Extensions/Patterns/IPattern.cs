@@ -25,7 +25,7 @@ namespace CSharp.Fluency.Extensions.Patterns
     ///     - There are two different syntaxes for adding a predicate with an associated result
     ///         - .Case(condition).Then(result)
     ///         - .Case(condition, result)
-    ///     - WithPredicate/Case syntax allows you to store a parameterised predicate via the SetPredicate call and repeatedly probe it with varying 
+    ///     - WithPredicate/Case syntax allows you to store a parameterised predicate via the WithPredicate call and repeatedly probe it with varying 
     ///       input via Case(). This is useful when you have a bunch of repetitive Case predicates which are practically identical aside from a 
     ///       changing input
     /// </summary>

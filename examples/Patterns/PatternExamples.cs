@@ -24,9 +24,13 @@ namespace CSharp.Fluency.Extensions.Examples.Patterns
             string picture = null;
 
             if (d.Contains("Dogs"))
+            {
                 picture = "dogs.png";
+            }
             else if (d.Contains("Cats"))
+            {
                 picture = "cats.png";
+            }
             else if (d.Contains("Fish"))
             {
                 if (d.Contains("Gourami"))
@@ -35,7 +39,9 @@ namespace CSharp.Fluency.Extensions.Examples.Patterns
                     picture = "tetra.png";
             }
             else
+            {
                 picture = "fallback.png";
+            }
 
             return Foo(picture).Length;
         }
