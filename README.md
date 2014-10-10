@@ -21,13 +21,13 @@ monads etc.
 * A framework to aid in writing fluent interfaces of your own.
  
 
-## Docs
+## Overview
 All of the features below have usage examples and tests present in the code. Most are implemented as extensions methods 
 on Object, aside from Pattern.
 
 
 ---
-### If (object extension)
+### If / Unless (object extension)
 
 There are many things I don't like about the below piece of code. I don't like that my nice functional LINQ expression has 
 been cleaved in two by some imperative logic. And I don't like that I have to declare an unnecessary foos variable and 
@@ -64,7 +64,8 @@ Now, if only LINQ offered some sort of If expression... well, I initially implem
         .Take(5)
         .ToList();
 
-Note that If can take either a bool or a predicate (i.e. Func`<bool>`).
+Note that If can take either a bool or a predicate (i.e. Func`<bool>`). Also, 'Unless' is provided as a convenience
+method which operates identically to If, except that the condition/predicate is inverted.
     
 
 ---

@@ -50,6 +50,44 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// <summary>
         /// Extension method
         /// <para>
+        /// Same as <see cref="If{T}(T, bool, Func{T, T})"/> except that the condition is inverted.
+        /// </para>
+        /// </summary>
+        public static T Unless<T>(this T @this, bool condition, Func<T, T> transformFunc)
+        {
+            return @this.If(() => !condition, transformFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Same as <see cref="If{T}(T, Func{bool}, Func{T, T})"/> except that the predicate is inverted.
+        /// </para>
+        /// </summary>
+        public static T Unless<T>(this T @this, Func<bool> predicate, Func<T, T> transformFunc)
+        {
+            return @this.If(() => !predicate(), transformFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Same as <see cref="If{T}(T, Func{T, bool}, Func{T, T})"/> except that the predicate is inverted.
+        /// </para>
+        /// </summary>
+        public static T Unless<T>(this T @this, Func<T, bool> predicate, Func<T, T> transformFunc)
+        {
+            return @this.If(t => !predicate(t), transformFunc);
+        }
+
+
+        #region IfNotNull methods
+
+        /// <summary>
+        /// Extension method
+        /// <para>
         /// Pretty simple. If @this is not null, apply <see cref="func"/> to it and return the result. Otherwise return null.
         /// </para>
         /// </summary>
@@ -63,7 +101,80 @@ namespace CSharp.Fluency.Extensions.Extensions
             return @this != null ? func(@this) : null;
         }
 
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes two transforms.
+        /// </para>
+        /// </summary>
+        public static TReturn IfNotNull<T, TIntermediate, TReturn>(this T @this, Func<T, TIntermediate> func1, Func<TIntermediate, TReturn> func2)
+            where T : class
+            where TIntermediate : class
+            where TReturn : class
+        {
+            return @this.IfNotNull(func1).IfNotNull(func2);
+        }
         
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes three transforms.
+        /// </para>
+        /// </summary>
+        public static TReturn IfNotNull<T, TIntermediate1, TIntermediate2, TReturn>(this T @this, 
+            Func<T, TIntermediate1> func1, Func<TIntermediate1, TIntermediate2> func2, Func<TIntermediate2, TReturn> func3)
+            where T : class
+            where TIntermediate1 : class
+            where TIntermediate2 : class
+            where TReturn : class
+        {
+            return @this.IfNotNull(func1, func2).IfNotNull(func3);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes four transforms.
+        /// </para>
+        /// </summary>
+        public static TReturn IfNotNull<T, TIntermediate1, TIntermediate2, TIntermediate3, TReturn>(this T @this, 
+                Func<T, TIntermediate1> func1, Func<TIntermediate1, TIntermediate2> func2, Func<TIntermediate2, TIntermediate3> func3, 
+                Func<TIntermediate3, TReturn> func4)
+            where T : class
+            where TIntermediate1 : class
+            where TIntermediate2 : class
+            where TIntermediate3 : class
+            where TReturn : class
+        {
+            return @this.IfNotNull(func1, func2, func3).IfNotNull(func4);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes five transforms.
+        /// </para>
+        /// </summary>
+        public static TReturn IfNotNull<T, TIntermediate1, TIntermediate2, TIntermediate3, TIntermediate4, TReturn>(this T @this, 
+                Func<T, TIntermediate1> func1, Func<TIntermediate1, TIntermediate2> func2, Func<TIntermediate2, TIntermediate3> func3, 
+                Func<TIntermediate3, TIntermediate4> func4, Func<TIntermediate4, TReturn> func5)
+            where T : class
+            where TIntermediate1 : class
+            where TIntermediate2 : class
+            where TIntermediate3 : class
+            where TIntermediate4 : class
+            where TReturn : class
+        {
+            return @this.IfNotNull(func1, func2, func3, func4).IfNotNull(func5);
+        }
+
+        #endregion
+
+
         /// <summary>
         /// Extension method
         /// <para>

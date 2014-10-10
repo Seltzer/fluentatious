@@ -44,7 +44,7 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
 
         static void InFutureCSharp(A input)
         {
-            // input?.Broccoli?.Carrot?.Value.IfNotNull(v => v + "asdfasdf").Do(Console.WriteLine);
+            // input?.Broccoli?.Carrot?.Value?.(v => v + "asdfasdf").Do(Console.WriteLine);
         }
     }
 

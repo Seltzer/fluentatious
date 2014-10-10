@@ -45,12 +45,55 @@ namespace CSharp.Fluency.Extensions.Tests.Extensions
 
 
         [Test]
+        public void Unless_BoolOverload()
+        {
+            IEnumerable<int> input = new[] { 0, 1, 2, 3, 4 };
+
+            CollectionAssert.AreEqual(input, input.Unless(true, elements => elements.Reverse()));
+            CollectionAssert.AreEqual(input.Reverse(), input.Unless(false, elements => elements.Reverse()));
+        }
+
+
+        [Test]
+        public void Unless_SimpleFuncOverload()
+        {
+            IEnumerable<int> input = new[] { 0, 1, 2, 3, 4 };
+
+            CollectionAssert.AreEqual(input, input.Unless(() => true, elements => elements.Reverse()));
+            CollectionAssert.AreEqual(input.Reverse(), input.Unless(() => false, elements => elements.Reverse()));
+        }
+
+
+        [Test]
+        public void Unless_ComplexFuncOverload()
+        {
+            IEnumerable<int> input = new[] { 0, 1, 2, 3, 4 };
+
+            CollectionAssert.AreEqual(input, input.Unless(
+                elements => elements.Count() != 4 && elements.Select( (index, e) => { return index == e;  }).All(r => r), 
+                elements => elements.Reverse()));
+
+            CollectionAssert.AreEqual(input.Reverse(), input.Unless(
+                elements => elements.Count() != 5 && elements.Select( (index, e) => { return index == e;  }).All(r => r), 
+                elements => elements.Reverse()));
+        }
+
+
+        [Test]
         public void IfNotNull()
         {
             Assert.AreEqual("dagnabbit", "dag".IfNotNull(str => str + "nabbit"));
             Assert.Null("dag".IfNotNull<string, string>(_ => null));
             Assert.Null(((string)null).IfNotNull<string, string>(_ => null));
             Assert.Null(((string)null).IfNotNull(_ => "dagnabbit"));
+        }
+
+
+        [Test]
+        public void IfNotNull_MultipleTransforms()
+        {
+            Assert.AreEqual("sdfasdf", "asdfasdf".IfNotNull(s => s.Substring(1), s => new EquatableTestClass(s), e => e.Key));
+            Assert.IsNull("asdfasdf".IfNotNull(s => (string)null, s => new EquatableTestClass(s), e => e.Key));
         }
 
 
