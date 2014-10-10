@@ -1,41 +1,36 @@
 csharp-fluency-extensions
 =========================
 
-Fluent extensions to C# which help you to achieve a higher level of fluency, generally favouring 
-functional style over imperative. 
-
 ## Motivation
 Most of the C# I write is rather LINQ heavy. Readability / maintainability benefits aside, LINQ is a pleasure to use 
 and I find myself missing its functional and fluent nature whenever I'm writing non-LINQ code in C#. And I find it 
 especially jarring when I'm force to depart from functional coding and intersperse bits of imperative code. So here
 are some of the fluent extensions / constructs which I've written in the past couple of years. 
 
-
-## Aims
-* Achieving fluency - to have nice code which flows from left to right like a pipeline in point-free style. No visual
+## What C# Fluency Extensions is:
+A library of object extensions and constructs which aim to make it easier to write fluent and functional C#, even when
+you're not working with LINQ. It aims to help you:
+* Achieve fluency - to have nice code which flows from left to right like a pipeline in point-free style. No visual
 jumping around necessary.
-* Having fewer unnecessary local variables
-* Mutating variables less often
+* Have fewer unnecessary local variables
+* Mutate variables less often
 
-
-## TODO
-* Wire up usage examples to main
-* Error handling ain't great
-* Add IfElse
-* README
-
+## What C# Fluency Extensions isn't:
+* An attempt to turn C# into a functional language by emulating functional constructs such as option types,
+monads etc.
+* A framework to aid in writing fluent interfaces of your own.
+ 
 
 ## Docs
 All of the features below have usage examples and tests present in the code. Most are implemented as extensions methods 
-on Object,
-aside from Pattern.
+on Object, aside from Pattern.
 
 
 ---
 ### If (object extension)
 
-There are many things I don't like about this piece of code. I don't like that my nice functional LINQ expression has 
-been cleaved in two by some imperative logic. And I don't like that I have to declare an unnecessary foo variable and 
+There are many things I don't like about the below piece of code. I don't like that my nice functional LINQ expression has 
+been cleaved in two by some imperative logic. And I don't like that I have to declare an unnecessary foos variable and 
 mutate it at various points.
 
     // Without If
@@ -69,7 +64,7 @@ Now, if only LINQ offered some sort of If expression... well, I initially implem
         .Take(5)
         .ToList();
 
-Note that If can take either a bool or a predicate (i.e. Func\*<bool>\*).
+Note that If can take either a bool or a predicate (i.e. Func`<bool>`).
     
 
 ---
@@ -116,6 +111,7 @@ print the result of Sum for debugging purposes.
         .Pipe(i => Math.Max(i, 7);
 
 Without Do/Tap, you'd split it like so:
+
     // Without Do/Tap
     var length = new[] { "go", "tuk", "hodor" }
         .Select(i => i + i)
@@ -158,7 +154,7 @@ cleaner and allows us to achieve a nice fluent flow in point-free fashion.
 Microsoft is actually planning to release a new language feature in C# 6 to address this very issue. You'll be able 
 to use it as per below. People refer to it as monadic null checking, because it's similar in behaviour to the 
 monadic bind operation in functional languages like Haskell. It's also similar to the way promises work in jQuery - 
-promises (can) allow you to string together synchronous/asynchronous actions which execute normally until failure 
+promises (can) allow you to string together synchronous/asynchronous actions which execute as normal until failure 
 occurs.
 
     // Future C# syntax
@@ -178,19 +174,22 @@ of ordered cases, where each case is composed of:
     # An associated result or a bunch of associated subcases.  
 
 Patterns support:
-    * Two syntaxes for specifying predicates and associating them with results:
-        * Case(condition, result)
-        * Case(condition).Then(result)
-    * Nested / default cases
-    * Three different syntaxes for adding subcases, which can be mixed:
-        * Normal syntax:    Case / Default / Break (break is required to eliminate ambiguity)
-        * Explicit syntax:  Case / Default / SubCase / SubDefault / SubSubCase / SubSubDefault
-        * Lambda syntax:    As a supplement to the above two, subcases can by passing in a subcases lambda.
-    * A means of storing a parameterised predicate so that you need only pass in the thing which changes.
-      Useful when you have a bunch of repetitive Case predicates which are practically identical aside from a 
-      changing input.
 
-Example without patterns
+* Two syntaxes for specifying predicates and associating them with results:
+    * Case(condition, result)
+    * Case(condition).Then(result)
+* Default cases
+* Subcases using three different syntaxes, which can be mixed:
+    * Normal syntax:    Case / Default / Break (break is required to eliminate ambiguity)
+    * Explicit syntax:  Case / Default / SubCase / SubDefault / SubSubCase / SubSubDefault
+    * Lambda syntax:    As a supplement to the above two, subcases can by passing in a subcases lambda.
+* A means of storing a parameterised predicate so that you need only pass in the thing which changes.
+    Useful when you have a bunch of repetitive Case predicates which are practically identical aside from a 
+    changing input.
+
+Example without patterns:
+
+    // Without patterns
     string picture = null;
 
     if (d.Contains("Dogs"))
@@ -216,8 +215,9 @@ Example without patterns
     return Foo(picture).Length;
 
 
-Example which realises the above as a mapping from bool conditions to string results
+Example which realises the above as a mapping from bool conditions to string results:
 
+    // Without patterns #2
     return new Dictionary`<bool, string>`
     {
         { d.Contains("Dogs"), "dogs.png" },
@@ -231,8 +231,9 @@ Example which realises the above as a mapping from bool conditions to string res
         .Pipe(Foo)
         .Length;
 
-Example which uses Pattern
+Example which uses Pattern:
 
+    // With patterns
     return Pattern`<string, string>`
         .Match(s)
             .Case(s.Contains("Dogs"), "dogs.png")
@@ -246,7 +247,7 @@ Example which uses Pattern
         .Pipe(Foo)
         .Length;
 
-Super extreme example which shows off all the capabilities of patterns
+Super extreme example which shows off the capabilities of patterns:
 
     return Pattern`<string, string>`
         .Match(input)
