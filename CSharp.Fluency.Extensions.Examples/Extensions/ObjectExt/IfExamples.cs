@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CSharp.Fluency.Extensions.Extensions;
 
@@ -9,12 +10,14 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
     {
         internal static void Do()
         {
+            Console.WriteLine("If examples");
+
             var input = new[] { "aaaa", "aaaaa", "adkdkdkdk", "sdfsdfsdf" };
             const SortingCriteria sortingCriterion = SortingCriteria.Alphabetical;
             const SortingDirection sortingDirection = SortingDirection.Ascending;
-
-            WithoutIf(input, sortingCriterion, sortingDirection);
-            WithIf(input, sortingCriterion, sortingDirection);
+            
+            WithoutIf(input, sortingCriterion, sortingDirection).Do(Print);
+            WithIf(input, sortingCriterion, sortingDirection).Do(Print);
         }
 
 
@@ -50,6 +53,12 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
                 .Skip(1)
                 .Take(5)
                 .ToList();
+        }
+
+
+        static void Print(IEnumerable<Foo> foos)
+        {
+            foos.Select(f => f.Bar).Pipe(bars => String.Join(", ", bars)).Do(Console.WriteLine);
         }
     }
 

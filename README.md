@@ -80,18 +80,18 @@ results to local variables, but that's something we're also trying to avoid. Or 
 readability, we could use Pipe!
     
     // Without Pipe
-    var blah = Compute(SomeMethod(SomeMethod("dhdhdh", Foo(Bar("horatio"))), "catatatatat"));
+    var blah = Compute(SomeMethod(SomeMethod("dhdhdh", Foo(Bar("horatio"))), "catatatat"));
 
     // Using Pipe 
     var blah = "horatio"
         .Pipe(Bar)
         .Pipe(Foo)
         .Pipe(str => SomeMethod("dhdhdh", str))
-        .Pipe(str => SomeMethod("catatatat", str))
-        .Pipe(Compute);
+        .Pipe(str => SomeMethod(str, "catatatat"))
+        .Pipe(Compute)
 
     // Using Pipe in another way (you can combine Pipes as you see fit)
-    var blah = "horatio".Pipe(Bar, Foo, str => SomeMethod("dhdhdh", str), str => SomeMethod("catatatat", str), Compute);
+     var blah = "horatio".Pipe(Bar, Foo, str => SomeMethod("dhdhdh", str), str => SomeMethod(str, "catatatat"), Compute)
     
 ---
 ### Do / Tap (object extensions)
@@ -162,10 +162,21 @@ occurs.
 
 
 ---
+### CastTo / As (object extensions)
+CastTo and As are pretty self-explanatory. They're simply method equivalents of intrinsic C# operators    
+
+// Without CastTo / As
+var result1 = Foo(Foo((string) Foo((string) Foo("horatio"))) as string);
+var result2 = ((string) ("horatio".Pipe(Foo))).Substring(1).ToLowerInvariant().Trim();
+        
+// With CastTo / As / Pipe
+var result1 = Foo("horatio").CastTo`<string>`().Pipe(Foo).CastTo`<string>`().Pipe(Foo).As`<string>`().Pipe(Foo);
+var result2 = "horatio".Pipe(Foo).CastTo`<string>`().Substring(1).ToLowerInvariant().Trim();
+
+---
 ### Patterns
-Patterns are an elaborate feature I'm experimenting with at the moment. While I have used them a few times in 
-production code, they're a bit of a toy at this stage, and I think they only lead to more readable code in a few 
-cases. 
+WARNING! Patterns are an elaborate feature I'm experimenting with at the moment. While I have used them in 
+production code, they're more of a toy at this stage, and I think they only lead to more readable code in a few cases. 
 
 A Pattern (as in pattern matching) is essentially a fluent substitute for a series of if/then statements or a switch
 statement, whose branches all conditionally assign different values to a local var. It is essentially a series
@@ -218,15 +229,16 @@ Example without patterns:
 Example which realises the above as a mapping from bool conditions to string results:
 
     // Without patterns #2
-    return new Dictionary`<bool, string>`
+    return new Dictionary`<Func<string, bool>, string>`
     {
-        { d.Contains("Dogs"), "dogs.png" },
-        { d.Contains("Cats"), "cats.png" },
-        { d.Contains("Fish") && d.Contains("Gourami"), "gourami.png" },
-        { d.Contains("Fish") && d.Contains("Tetra"), "tetra.png" },
-        { !d.Contains("Fish"), "fallback.png" }
+        { str => str.Contains("Dogs"), "dogs.png" },
+        { str => str.Contains("Cats"), "cats.png" },
+        { str => str.Contains("Fish") && d.Contains("Gourami"), "gourami.png" },
+        { str => str.Contains("Fish") && d.Contains("Tetra"), "tetra.png" },
+        { str => !str.Contains("Fish") && d.Contains("Tetra"), "tetra.png" },
+        { str => !str.Contains("Fish"), "fallback.png" }
     }
-        .First(kvPair => kvPair.Key)
+        .FirstOrDefault(kvPair => kvPair.Key(d))
         .Value
         .Pipe(Foo)
         .Length;

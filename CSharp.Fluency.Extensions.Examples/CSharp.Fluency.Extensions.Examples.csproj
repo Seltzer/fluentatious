@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ObjectExt\DoExamples.cs" />
+    <Compile Include="Extensions\ObjectExt\CastAndAsExamples.cs" />
     <Compile Include="Patterns\PatternExamples.cs" />
     <Compile Include="Extensions\ObjectExt\PipeExamples.cs" />
     <Compile Include="Extensions\ObjectExt\IfNotNullExamples.cs" />

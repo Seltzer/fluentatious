@@ -10,10 +10,12 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
     {
         internal static void Do()
         {
+            Console.WriteLine("Do examples");
+
             var strings = new[] { "aaa", "bbb", "cccc" };
 
-            WithoutDo(strings);
-            WithDo(strings);
+            Console.WriteLine("\nresult = " + WithoutDo(strings) + "\n");
+            Console.WriteLine("\nresult = " + WithDo(strings));
         }
 
 

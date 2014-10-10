@@ -1,4 +1,5 @@
-﻿using CSharp.Fluency.Extensions.Extensions;
+﻿using System;
+using CSharp.Fluency.Extensions.Extensions;
 
 namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
 {
@@ -7,14 +8,18 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
     {
         internal static void Do()
         {
+            Console.WriteLine("Pipe examples");
+
             WithoutPipe();
             WithPipe();
+            WithPipe2();
         }
 
 
         static void WithoutPipe()
         {
-            var blah = Compute(SomeMethod(SomeMethod("dhdhdh", Foo(Bar("horatio"))), "catatatatat"));
+            var blah = Compute(SomeMethod(SomeMethod("dhdhdh", Foo(Bar("horatio"))), "catatatat"));
+            Console.WriteLine(blah);
         }
 
 
@@ -24,14 +29,17 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
                 .Pipe(Bar)
                 .Pipe(Foo)
                 .Pipe(str => SomeMethod("dhdhdh", str))
-                .Pipe(str => SomeMethod("catatatat", str))
-                .Pipe(Compute);
+                .Pipe(str => SomeMethod(str, "catatatat"))
+                .Pipe(Compute)
+                .Tap(Console.WriteLine);
         }
 
 
         static void WithPipe2()
         {
-            var blah = "horatio".Pipe(Bar, Foo, str => SomeMethod("dhdhdh", str), str => SomeMethod("catatatat", str), Compute);
+            var blah = "horatio"
+                .Pipe(Bar, Foo, str => SomeMethod("dhdhdh", str), str => SomeMethod(str, "catatatat"), Compute)
+                .Tap(Console.WriteLine);
         }
 
 

@@ -8,6 +8,8 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
     {
         internal static void Do()
         {
+            Console.WriteLine("IfNotNull examples");
+
             var nested = new A
             {
                 Broccoli = new B

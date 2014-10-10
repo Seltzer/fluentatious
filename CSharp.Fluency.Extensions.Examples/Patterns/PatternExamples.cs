@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CSharp.Fluency.Extensions.Extensions;
 using CSharp.Fluency.Extensions.Patterns;
@@ -10,12 +11,14 @@ namespace CSharp.Fluency.Extensions.Examples.Patterns
     {
         internal static void Do()
         {
+            Console.WriteLine("Pattern examples");
+
             const string input = "Gourami Fish";
-            WithoutPatternsUsingIfElse(input);
-            WithoutPatternsUsingDictionary(input);
-            WithPatterns(input);
+            WithoutPatternsUsingIfElse(input).Do(Console.WriteLine);
+            WithoutPatternsUsingDictionary(input).Do(Console.WriteLine);
+            WithPatterns(input).Do(Console.WriteLine);
             
-            AdvancedPatternsExample(input);
+            AdvancedPatternsExample("super smart fast calm brown bear").Do(Console.WriteLine);
         }
 
 
@@ -49,15 +52,16 @@ namespace CSharp.Fluency.Extensions.Examples.Patterns
 
         static int WithoutPatternsUsingDictionary(string d)
         {
-            return new Dictionary<bool, string>
+            return new Dictionary<Func<string, bool>, string>
             {
-                { d.Contains("Dogs"), "dogs.png" },
-                { d.Contains("Cats"), "cats.png" },
-                { d.Contains("Fish") && d.Contains("Gourami"), "gourami.png" },
-                { d.Contains("Fish") && d.Contains("Tetra"), "tetra.png" },
-                { !d.Contains("Fish"), "fallback.png" }
+                { str => str.Contains("Dogs"), "dogs.png" },
+                { str => str.Contains("Cats"), "cats.png" },
+                { str => str.Contains("Fish") && d.Contains("Gourami"), "gourami.png" },
+                { str => str.Contains("Fish") && d.Contains("Tetra"), "tetra.png" },
+                { str => !str.Contains("Fish") && d.Contains("Tetra"), "tetra.png" },
+                { str => !str.Contains("Fish"), "fallback.png" }
             }
-                .First(kvPair => kvPair.Key)
+                .FirstOrDefault(kvPair => kvPair.Key(d))
                 .Value
                 .Pipe(Foo)
                 .Length;
