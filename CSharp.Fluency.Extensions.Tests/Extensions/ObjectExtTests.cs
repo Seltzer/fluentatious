@@ -78,6 +78,57 @@ namespace CSharp.Fluency.Extensions.Tests.Extensions
                 elements => elements.Reverse()));
         }
 
+        [Test]
+        public void IfElse_BoolConditionAndTResultOverload()
+        {
+            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElse(true, "yay", "nay"));
+            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElse(false, "yay", "nay"));
+        }
+
+        [Test]
+        public void IfElse_SimplePredicateAndTResultOverload()
+        {
+            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElse(() => true, "yay", "nay"));
+            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElse(() => false, "yay", "nay"));
+        }
+
+
+        [Test]
+        public void IfElse_ComplexPredicateAndTResultOverload()
+        {
+            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(3), "yay", "nay"));
+            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(30), "yay", "nay"));
+        }
+
+
+        [Test]
+        public void IfElse_BoolConditionAndFuncOverload()
+        {
+            Assert.AreEqual(5, new[] { 0, 1, 2, 3, 4 }.IfElse(true, numbers => numbers.Count(), numbers => numbers.Count() - 3));
+            Assert.AreEqual(2, new[] { 0, 1, 2, 3, 4 }.IfElse(false, numbers => numbers.Count(), numbers => numbers.Count() - 3));
+        }
+        
+
+        [Test]
+        public void IfElse_SimplePredicateAndFuncOverload()
+        {
+            Assert.AreEqual(4, 
+                new[] { 0, 1, 2, 3, 4 }.IfElse(() => true, numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+            Assert.AreEqual(2, 
+                new[] { 0, 1, 2, 3, 4 }.IfElse(() => false, numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+        }
+
+
+        [Test]
+        public void IfElse_ComplexPredicateAndFuncOverload()
+        {
+            Assert.AreEqual(4, 
+                new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(3), numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+            Assert.AreEqual(2, 
+                new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(30), numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+
+        }
+
 
         [Test]
         public void IfNotNull()

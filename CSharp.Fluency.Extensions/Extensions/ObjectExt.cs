@@ -6,6 +6,8 @@ namespace CSharp.Fluency.Extensions.Extensions
 
     public static class ObjectExt
     {
+        #region If methods
+
         /// <summary>
         /// Extension method
         /// <para>
@@ -46,6 +48,10 @@ namespace CSharp.Fluency.Extensions.Extensions
             return predicate(@this) ? transformFunc(@this) : @this;
         }
 
+        #endregion
+
+
+        #region Unless methods
 
         /// <summary>
         /// Extension method
@@ -81,6 +87,89 @@ namespace CSharp.Fluency.Extensions.Extensions
         {
             return @this.If(t => !predicate(t), transformFunc);
         }
+
+        #endregion
+
+        #region IfElse methods
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// If the specified predicate is satisfied, transform using ifFunc, else transform using elseFunc
+        /// </para>
+        /// </summary>
+        public static TResult IfElse<T, TResult>(this T @this, Func<bool> predicate, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        {
+            return @this.IfElse(_ => predicate(), ifFunc, elseFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Overload of <see cref="IfElse{T, TReturn}(T, Func{bool}, Func{T, TReturn}, Func{T, TReturn})"/> which takes a bool instead 
+        /// of a Func{bool}
+        /// </para>
+        /// </summary>
+        public static TResult IfElse<T, TResult>(this T @this, bool condition, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        {
+            return @this.IfElse(_ => condition, ifFunc, elseFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Same as <see cref="IfElse{T, TReturn}(T, Func{bool}, Func{T, TReturn}, Func{T, TReturn})"/> except that the predicate is a 
+        /// little more helpful.
+        /// </para>
+        /// </summary>
+        public static TResult IfElse<T, TResult>(this T @this, Func<T, bool> predicate, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        {
+            return @this.Pipe(predicate(@this) ? ifFunc : elseFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// If the specified predicate is satisfied, return ifResult, else return elseResult.
+        /// </para>
+        /// </summary>
+        public static TResult IfElse<T, TResult>(this T @this, Func<bool> predicate, TResult ifResult, TResult elseResult)
+        {
+            return @this.IfElse(_ => predicate(), ifResult, elseResult);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Overload of <see cref="IfElse{T, TReturn}(T, Func{bool}, TReturn, TReturn)"/> which takes a bool instead 
+        /// of a Func{bool}
+        /// </para>
+        /// </summary>
+        public static TResult IfElse<T, TResult>(this T @this, bool condition, TResult ifResult, TResult elseResult)
+        {
+            return @this.IfElse(_ => condition, ifResult, elseResult);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Same as <see cref="IfElse{T, TReturn}(T, Func{bool}, TReturn, TReturn)"/> except that the predicate is a 
+        /// little more helpful.
+        /// </para>
+        /// </summary>
+        public static TResult IfElse<T, TResult>(this T @this, Func<T, bool> predicate, TResult ifResult, TResult elseResult)
+        {
+            return predicate(@this) ? ifResult : elseResult;
+        }
+
+        #endregion
+
 
 
         #region IfNotNull methods

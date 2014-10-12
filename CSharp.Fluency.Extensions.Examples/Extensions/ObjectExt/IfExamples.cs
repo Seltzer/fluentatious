@@ -18,6 +18,7 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
             
             WithoutIf(input, sortingCriterion, sortingDirection).Do(Print);
             WithIf(input, sortingCriterion, sortingDirection).Do(Print);
+            WithIfElse(input, sortingCriterion, sortingDirection).Do(Print);
         }
 
 
@@ -50,6 +51,26 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
                 .If(sortingCriterion == SortingCriteria.Alphabetical, foos => foos.OrderBy(f => f.Bar))
                 .If(sortingCriterion == SortingCriteria.LengthBased, foos => foos.OrderBy(f => f.Length))
                 .If(() => sortingDirection == SortingDirection.Descending, Enumerable.Reverse)
+                .Skip(1)
+                .Take(5)
+                .ToList();
+        }
+
+
+        static IEnumerable<Foo> WithIfElse(IEnumerable<string> input, SortingCriteria sortingCriterion, SortingDirection sortingDirection)
+        {
+            return input
+                .Where(str => str.StartsWith("a"))
+                .Select(str => new Foo(str))
+                .IfElse(sortingCriterion == SortingCriteria.Alphabetical, 
+                    foos => foos.OrderBy(f => f.Bar),
+                    foos => foos.OrderBy(f => f.Length)
+                    )
+                //.Do(k =>
+                //{
+                    
+                //})
+                //.If(() => sortingDirection == SortingDirection.Descending, Enumerable.Reverse)
                 .Skip(1)
                 .Take(5)
                 .ToList();
