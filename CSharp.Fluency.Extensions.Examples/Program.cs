@@ -14,7 +14,7 @@ namespace CSharp.Fluency.Extensions.Examples
             {
                 DoExamples.Do,
                 IfExamples.Do,
-                IfNotNullExamples.Do,
+                NullSafeExamples.Do,
                 PipeExamples.Do,
                 CastAndAsExamples.Do,
                 PatternExamples.Do

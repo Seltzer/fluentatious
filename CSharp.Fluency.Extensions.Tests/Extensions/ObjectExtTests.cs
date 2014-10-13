@@ -42,7 +42,7 @@ namespace CSharp.Fluency.Extensions.Tests.Extensions
                 elements => elements.Count() == 5 && elements.Select( (index, e) => { return index == e;  }).All(r => r), 
                 elements => elements.Reverse()));
         }
-
+        
 
         [Test]
         public void Unless_BoolOverload()
@@ -70,81 +70,96 @@ namespace CSharp.Fluency.Extensions.Tests.Extensions
             IEnumerable<int> input = new[] { 0, 1, 2, 3, 4 };
 
             CollectionAssert.AreEqual(input, input.Unless(
-                elements => elements.Count() != 4 && elements.Select( (index, e) => { return index == e;  }).All(r => r), 
+                elements => elements.Count() != 4 && elements.Select( (index, e) => index == e).All(r => r), 
                 elements => elements.Reverse()));
 
             CollectionAssert.AreEqual(input.Reverse(), input.Unless(
-                elements => elements.Count() != 5 && elements.Select( (index, e) => { return index == e;  }).All(r => r), 
+                elements => elements.Count() != 5 && elements.Select( (index, e) => index == e).All(r => r), 
                 elements => elements.Reverse()));
         }
 
+        
         [Test]
-        public void IfElse_BoolConditionAndTResultOverload()
+        public void IfElse()
         {
-            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElse(true, "yay", "nay"));
-            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElse(false, "yay", "nay"));
-        }
-
-        [Test]
-        public void IfElse_SimplePredicateAndTResultOverload()
-        {
-            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElse(() => true, "yay", "nay"));
-            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElse(() => false, "yay", "nay"));
-        }
-
-
-        [Test]
-        public void IfElse_ComplexPredicateAndTResultOverload()
-        {
-            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(3), "yay", "nay"));
-            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(30), "yay", "nay"));
+            CollectionAssert.AreEqual(
+                new[] { "ax", "bx", "ay", "by", "bz", "az"},
+                new[] { "ay", "bz", "ax", "bx", "by", "az" }
+                    .AsEnumerable()
+                    .IfElse(false, 
+                        strings => strings.OrderBy(c => c.First()),
+                        strings => strings.OrderBy(c => c.Last()))
+                );
         }
 
 
         [Test]
-        public void IfElse_BoolConditionAndFuncOverload()
+        public void IfElseT_BoolConditionAndTResultOverload()
         {
-            Assert.AreEqual(5, new[] { 0, 1, 2, 3, 4 }.IfElse(true, numbers => numbers.Count(), numbers => numbers.Count() - 3));
-            Assert.AreEqual(2, new[] { 0, 1, 2, 3, 4 }.IfElse(false, numbers => numbers.Count(), numbers => numbers.Count() - 3));
+            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElseT(true, "yay", "nay"));
+            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElseT(false, "yay", "nay"));
+        }
+
+        [Test]
+        public void IfElseT_SimplePredicateAndTResultOverload()
+        {
+            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElseT(() => true, "yay", "nay"));
+            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElseT(() => false, "yay", "nay"));
+        }
+
+
+        [Test]
+        public void IfElseT_ComplexPredicateAndTResultOverload()
+        {
+            Assert.AreEqual("yay", new[] { 0, 1, 2, 3, 4 }.IfElseT(n => n.Contains(3), "yay", "nay"));
+            Assert.AreEqual("nay", new[] { 0, 1, 2, 3, 4 }.IfElseT(n => n.Contains(30), "yay", "nay"));
+        }
+
+
+        [Test]
+        public void IfElseT_BoolConditionAndFuncOverload()
+        {
+            Assert.AreEqual(5, new[] { 0, 1, 2, 3, 4 }.IfElseT(true, numbers => numbers.Count(), numbers => numbers.Count() - 3));
+            Assert.AreEqual(2, new[] { 0, 1, 2, 3, 4 }.IfElseT(false, numbers => numbers.Count(), numbers => numbers.Count() - 3));
         }
         
 
         [Test]
-        public void IfElse_SimplePredicateAndFuncOverload()
+        public void IfElseT_SimplePredicateAndFuncOverload()
         {
             Assert.AreEqual(4, 
-                new[] { 0, 1, 2, 3, 4 }.IfElse(() => true, numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+                new[] { 0, 1, 2, 3, 4 }.IfElseT(() => true, numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
             Assert.AreEqual(2, 
-                new[] { 0, 1, 2, 3, 4 }.IfElse(() => false, numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+                new[] { 0, 1, 2, 3, 4 }.IfElseT(() => false, numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
         }
 
 
         [Test]
-        public void IfElse_ComplexPredicateAndFuncOverload()
+        public void IfElseT_ComplexPredicateAndFuncOverload()
         {
             Assert.AreEqual(4, 
-                new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(3), numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+                new[] { 0, 1, 2, 3, 4 }.IfElseT(n => n.Contains(3), numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
             Assert.AreEqual(2, 
-                new[] { 0, 1, 2, 3, 4 }.IfElse(n => n.Contains(30), numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
+                new[] { 0, 1, 2, 3, 4 }.IfElseT(n => n.Contains(30), numbers => numbers.Take(4), numbers => numbers.Take(2)).Count());
 
         }
 
 
         [Test]
-        public void IfNotNull()
+        public void NullSafe()
         {
-            Assert.AreEqual("dagnabbit", "dag".IfNotNull(str => str + "nabbit"));
-            Assert.Null("dag".IfNotNull<string, string>(_ => null));
-            Assert.Null(((string)null).IfNotNull<string, string>(_ => null));
-            Assert.Null(((string)null).IfNotNull(_ => "dagnabbit"));
+            Assert.AreEqual("dagnabbit", "dag".NullSafe(str => str + "nabbit"));
+            Assert.Null("dag".NullSafe<string, string>(_ => null));
+            Assert.Null(((string)null).NullSafe<string, string>(_ => null));
+            Assert.Null(((string)null).NullSafe(_ => "dagnabbit"));
         }
 
 
         [Test]
-        public void IfNotNull_MultipleTransforms()
+        public void NullSafe_MultipleTransforms()
         {
-            Assert.AreEqual("sdfasdf", "asdfasdf".IfNotNull(s => s.Substring(1), s => new EquatableTestClass(s), e => e.Key));
-            Assert.IsNull("asdfasdf".IfNotNull(s => (string)null, s => new EquatableTestClass(s), e => e.Key));
+            Assert.AreEqual("sdfasdf", "asdfasdf".NullSafe(s => s.Substring(1), s => new EquatableTestClass(s), e => e.Key));
+            Assert.IsNull("asdfasdf".NullSafe(s => (string)null, s => new EquatableTestClass(s), e => e.Key));
         }
 
 

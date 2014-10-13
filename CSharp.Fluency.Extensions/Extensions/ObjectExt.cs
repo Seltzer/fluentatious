@@ -90,16 +90,15 @@ namespace CSharp.Fluency.Extensions.Extensions
 
         #endregion
 
-        #region IfElse methods
-
-
+        #region IfElse/IfElseT methods
+        
         /// <summary>
         /// Extension method
         /// <para>
         /// If the specified predicate is satisfied, transform using ifFunc, else transform using elseFunc
         /// </para>
         /// </summary>
-        public static TResult IfElse<T, TResult>(this T @this, Func<bool> predicate, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        public static T IfElse<T>(this T @this, Func<bool> predicate, Func<T, T> ifFunc, Func<T, T> elseFunc)
         {
             return @this.IfElse(_ => predicate(), ifFunc, elseFunc);
         }
@@ -108,11 +107,11 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// <summary>
         /// Extension method
         /// <para>
-        /// Overload of <see cref="IfElse{T, TReturn}(T, Func{bool}, Func{T, TReturn}, Func{T, TReturn})"/> which takes a bool instead 
+        /// Overload of <see cref="IfElse{T}(T, Func{bool}, Func{T, T}, Func{T, T})"/> which takes a bool instead 
         /// of a Func{bool}
         /// </para>
         /// </summary>
-        public static TResult IfElse<T, TResult>(this T @this, bool condition, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        public static T IfElse<T>(this T @this, bool condition, Func<T, T> ifFunc, Func<T, T> elseFunc)
         {
             return @this.IfElse(_ => condition, ifFunc, elseFunc);
         }
@@ -121,11 +120,10 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// <summary>
         /// Extension method
         /// <para>
-        /// Same as <see cref="IfElse{T, TReturn}(T, Func{bool}, Func{T, TReturn}, Func{T, TReturn})"/> except that the predicate is a 
-        /// little more helpful.
+        /// Same as <see cref="IfElse{T}(T, Func{bool}, Func{T, T}, Func{T, T})"/> except that the predicate is a little more helpful.
         /// </para>
         /// </summary>
-        public static TResult IfElse<T, TResult>(this T @this, Func<T, bool> predicate, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        public static T IfElse<T>(this T @this, Func<T, bool> predicate, Func<T, T> ifFunc, Func<T, T> elseFunc)
         {
             return @this.Pipe(predicate(@this) ? ifFunc : elseFunc);
         }
@@ -137,20 +135,20 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// If the specified predicate is satisfied, return ifResult, else return elseResult.
         /// </para>
         /// </summary>
-        public static TResult IfElse<T, TResult>(this T @this, Func<bool> predicate, TResult ifResult, TResult elseResult)
+        public static T IfElse<T>(this T @this, Func<bool> predicate, T ifResult, T elseResult)
         {
-            return @this.IfElse(_ => predicate(), ifResult, elseResult);
+            return @this.IfElseT(_ => predicate(), ifResult, elseResult);
         }
 
 
         /// <summary>
         /// Extension method
         /// <para>
-        /// Overload of <see cref="IfElse{T, TReturn}(T, Func{bool}, TReturn, TReturn)"/> which takes a bool instead 
+        /// Overload of <see cref="IfElseT{T,TResult}(T,System.Func{bool},TResult,TResult)"/> which takes a bool instead 
         /// of a Func{bool}
         /// </para>
         /// </summary>
-        public static TResult IfElse<T, TResult>(this T @this, bool condition, TResult ifResult, TResult elseResult)
+        public static T IfElse<T>(this T @this, bool condition, T ifResult, T elseResult)
         {
             return @this.IfElse(_ => condition, ifResult, elseResult);
         }
@@ -159,11 +157,87 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// <summary>
         /// Extension method
         /// <para>
-        /// Same as <see cref="IfElse{T, TReturn}(T, Func{bool}, TReturn, TReturn)"/> except that the predicate is a 
+        /// Same as <see cref="IfElse{T}(T,System.Func{bool},T,T)"/> except that the predicate is a 
         /// little more helpful.
         /// </para>
         /// </summary>
-        public static TResult IfElse<T, TResult>(this T @this, Func<T, bool> predicate, TResult ifResult, TResult elseResult)
+        public static T IfElse<T>(this T @this, Func<T, bool> predicate, T ifResult, T elseResult)
+        {
+            return IfElseT(@this, predicate, ifResult, elseResult);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// If the specified predicate is satisfied, transform using ifFunc, else transform using elseFunc
+        /// </para>
+        /// </summary>
+        public static TResult IfElseT<T, TResult>(this T @this, Func<bool> predicate, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        {
+            return @this.IfElseT(_ => predicate(), ifFunc, elseFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Overload of <see cref="IfElseT{T, TReturn}(T, Func{bool}, Func{T, TReturn}, Func{T, TReturn})"/> which takes a bool instead 
+        /// of a Func{bool}
+        /// </para>
+        /// </summary>
+        public static TResult IfElseT<T, TResult>(this T @this, bool condition, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        {
+            return @this.IfElseT(_ => condition, ifFunc, elseFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Same as <see cref="IfElseT{T, TReturn}(T, Func{bool}, Func{T, TReturn}, Func{T, TReturn})"/> except that the predicate is a 
+        /// little more helpful.
+        /// </para>
+        /// </summary>
+        public static TResult IfElseT<T, TResult>(this T @this, Func<T, bool> predicate, Func<T, TResult> ifFunc, Func<T, TResult> elseFunc)
+        {
+            return @this.Pipe(predicate(@this) ? ifFunc : elseFunc);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// If the specified predicate is satisfied, return ifResult, else return elseResult.
+        /// </para>
+        /// </summary>
+        public static TResult IfElseT<T, TResult>(this T @this, Func<bool> predicate, TResult ifResult, TResult elseResult)
+        {
+            return @this.IfElseT(_ => predicate(), ifResult, elseResult);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Overload of <see cref="IfElseT{T,TResult}(T,System.Func{bool},TResult,TResult)"/> which takes a bool instead 
+        /// of a Func{bool}
+        /// </para>
+        /// </summary>
+        public static TResult IfElseT<T, TResult>(this T @this, bool condition, TResult ifResult, TResult elseResult)
+        {
+            return @this.IfElseT(_ => condition, ifResult, elseResult);
+        }
+
+
+        /// <summary>
+        /// Extension method
+        /// <para>
+        /// Same as <see cref="IfElseT{T,TResult}(T,System.Func{bool},TResult,TResult)"/> except that the predicate is a 
+        /// little more helpful.
+        /// </para>
+        /// </summary>
+        public static TResult IfElseT<T, TResult>(this T @this, Func<T, bool> predicate, TResult ifResult, TResult elseResult)
         {
             return predicate(@this) ? ifResult : elseResult;
         }
@@ -172,7 +246,7 @@ namespace CSharp.Fluency.Extensions.Extensions
 
 
 
-        #region IfNotNull methods
+        #region NullSafe methods
 
         /// <summary>
         /// Extension method
@@ -180,7 +254,7 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// Pretty simple. If @this is not null, apply <see cref="func"/> to it and return the result. Otherwise return null.
         /// </para>
         /// </summary>
-        public static TReturn IfNotNull<T, TReturn>(this T @this, Func<T, TReturn> func)
+        public static TReturn NullSafe<T, TReturn>(this T @this, Func<T, TReturn> func)
             where T : class
             where TReturn : class
         {
@@ -194,42 +268,42 @@ namespace CSharp.Fluency.Extensions.Extensions
         /// <summary>
         /// Extension method
         /// <para>
-        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes two transforms.
+        /// Variation of <see cref="NullSafe{T, TReturn}(T, Func{T, TReturn})"/> which takes two transforms.
         /// </para>
         /// </summary>
-        public static TReturn IfNotNull<T, TIntermediate, TReturn>(this T @this, Func<T, TIntermediate> func1, Func<TIntermediate, TReturn> func2)
+        public static TReturn NullSafe<T, TIntermediate, TReturn>(this T @this, Func<T, TIntermediate> func1, Func<TIntermediate, TReturn> func2)
             where T : class
             where TIntermediate : class
             where TReturn : class
         {
-            return @this.IfNotNull(func1).IfNotNull(func2);
+            return @this.NullSafe(func1).NullSafe(func2);
         }
         
 
         /// <summary>
         /// Extension method
         /// <para>
-        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes three transforms.
+        /// Variation of <see cref="NullSafe{T, TReturn}(T, Func{T, TReturn})"/> which takes three transforms.
         /// </para>
         /// </summary>
-        public static TReturn IfNotNull<T, TIntermediate1, TIntermediate2, TReturn>(this T @this, 
+        public static TReturn NullSafe<T, TIntermediate1, TIntermediate2, TReturn>(this T @this, 
             Func<T, TIntermediate1> func1, Func<TIntermediate1, TIntermediate2> func2, Func<TIntermediate2, TReturn> func3)
             where T : class
             where TIntermediate1 : class
             where TIntermediate2 : class
             where TReturn : class
         {
-            return @this.IfNotNull(func1, func2).IfNotNull(func3);
+            return @this.NullSafe(func1, func2).NullSafe(func3);
         }
 
 
         /// <summary>
         /// Extension method
         /// <para>
-        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes four transforms.
+        /// Variation of <see cref="NullSafe{T, TReturn}(T, Func{T, TReturn})"/> which takes four transforms.
         /// </para>
         /// </summary>
-        public static TReturn IfNotNull<T, TIntermediate1, TIntermediate2, TIntermediate3, TReturn>(this T @this, 
+        public static TReturn NullSafe<T, TIntermediate1, TIntermediate2, TIntermediate3, TReturn>(this T @this, 
                 Func<T, TIntermediate1> func1, Func<TIntermediate1, TIntermediate2> func2, Func<TIntermediate2, TIntermediate3> func3, 
                 Func<TIntermediate3, TReturn> func4)
             where T : class
@@ -238,17 +312,17 @@ namespace CSharp.Fluency.Extensions.Extensions
             where TIntermediate3 : class
             where TReturn : class
         {
-            return @this.IfNotNull(func1, func2, func3).IfNotNull(func4);
+            return @this.NullSafe(func1, func2, func3).NullSafe(func4);
         }
 
 
         /// <summary>
         /// Extension method
         /// <para>
-        /// Variation of <see cref="IfNotNull{T, TReturn}(T, Func{T, TReturn})"/> which takes five transforms.
+        /// Variation of <see cref="NullSafe{T, TReturn}(T, Func{T, TReturn})"/> which takes five transforms.
         /// </para>
         /// </summary>
-        public static TReturn IfNotNull<T, TIntermediate1, TIntermediate2, TIntermediate3, TIntermediate4, TReturn>(this T @this, 
+        public static TReturn NullSafe<T, TIntermediate1, TIntermediate2, TIntermediate3, TIntermediate4, TReturn>(this T @this, 
                 Func<T, TIntermediate1> func1, Func<TIntermediate1, TIntermediate2> func2, Func<TIntermediate2, TIntermediate3> func3, 
                 Func<TIntermediate3, TIntermediate4> func4, Func<TIntermediate4, TReturn> func5)
             where T : class
@@ -258,7 +332,7 @@ namespace CSharp.Fluency.Extensions.Extensions
             where TIntermediate4 : class
             where TReturn : class
         {
-            return @this.IfNotNull(func1, func2, func3, func4).IfNotNull(func5);
+            return @this.NullSafe(func1, func2, func3, func4).NullSafe(func5);
         }
 
         #endregion

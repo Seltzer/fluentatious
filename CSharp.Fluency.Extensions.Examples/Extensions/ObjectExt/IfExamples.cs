@@ -66,11 +66,7 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
                     foos => foos.OrderBy(f => f.Bar),
                     foos => foos.OrderBy(f => f.Length)
                     )
-                //.Do(k =>
-                //{
-                    
-                //})
-                //.If(() => sortingDirection == SortingDirection.Descending, Enumerable.Reverse)
+                .If(() => sortingDirection == SortingDirection.Descending, Enumerable.Reverse)
                 .Skip(1)
                 .Take(5)
                 .ToList();

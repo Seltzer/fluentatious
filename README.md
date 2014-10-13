@@ -27,7 +27,7 @@ on Object, aside from Pattern.
 
 
 ---
-### If / Unless (object extension)
+### If / Unless / IfElse (object extension)
 
 There are many things I don't like about the below piece of code. I don't like that my nice functional LINQ expression has 
 been cleaved in two by some imperative logic. And I don't like that I have to declare an unnecessary foos variable and 
@@ -67,6 +67,11 @@ Now, if only LINQ offered some sort of If expression... well, I initially implem
 Note that If can take either a bool or a predicate (i.e. Func`<bool>`). Also, 'Unless' is provided as a convenience
 method which operates identically to If, except that the condition/predicate is inverted.
     
+Note that the first two Ifs following the Select could be replace by:
+    // ...
+        .IfElse(sortingCriterion == SortingCriteria.Alphabetical, 
+            foos => foos.OrderBy(f => f.Bar),
+            foos => foos.OrderBy(f => f.Length))
 
 ---
 ### Pipe (object extension)
@@ -136,21 +141,24 @@ logging. Using Do / Tap:
     
     
 ---
-### IfNotNull (object extension)
+### NullSafe (object extension)
     
-Performing tedious null checking is annoying, so I defined an object extension called IfNotNull which I use 
-as below. It's a pretty simple example of continuation-style passing really. If the input to IfNotNull isn't null, 
+Performing tedious null checking is annoying, so I defined an object extension called NullSafe which I use 
+as below. It's a pretty simple example of continuation-style passing really. If the input to NullSafe isn't null, 
 its expression will be evaluated to produce something new... otherwise the entire expression will return null. 
 Basically, we're executing a series of expressions until a failure occurs at any point. It makes the code considerably 
 cleaner and allows us to achieve a nice fluent flow in point-free fashion.
 
-    // Without IfNotNull
+    // Without NullSafe
     var value = input != null && input.Broccoli != null && input.Broccoli.Carrot != null 
         ? (input.Broccoli.Carrot.Value + "asdfasdf")
         : null;
 
-    // With IfNotNull
-    var value = input.IfNotNull(i => i.Broccoli).IfNotNull(b => b.Carrot).IfNotNull(c => c.Value).IfNotNull(v => v + "asdfasdf").Do(Console.WriteLine);
+    // With NullSafe
+    var value = input.NullSafe(i => i.Broccoli).NullSafe(b => b.Carrot).NullSafe(c => c.Value).NullSafe(v => v + "asdfasdf").Do(Console.WriteLine);
+
+    // Alternatively
+    var value = input.NullSafe(i => i.Broccoli, b => b.Carrot, c => c.Value, v => v + "asdfasdf").Do(Console.WriteLine);
 
 Microsoft is actually planning to release a new language feature in C# 6 to address this very issue. You'll be able 
 to use it as per below. People refer to it as monadic null checking, because it's similar in behaviour to the 
@@ -159,7 +167,7 @@ promises (can) allow you to string together synchronous/asynchronous actions whi
 occurs.
 
     // Future C# syntax
-    var value = input?.Broccoli?.Carrot?.Value.IfNotNull(v => v + "asdfasdf").Do(Console.WriteLine);
+    var value = input?.Broccoli?.Carrot?.Value.NullSafe(v => v + "asdfasdf").Do(Console.WriteLine);
 
 
 ---

@@ -4,11 +4,11 @@ using CSharp.Fluency.Extensions.Extensions;
 namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
 {
     
-    static class IfNotNullExamples
+    static class NullSafeExamples
     {
         internal static void Do()
         {
-            Console.WriteLine("IfNotNull examples");
+            Console.WriteLine("NullSafe examples");
 
             var nested = new A
             {
@@ -21,13 +21,14 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
                 }
             };
             
-            WithoutIfNotNull1(nested);
-            WithIfNotNull2(nested);
+            WithoutNullSafe(nested);
+            WithNullSafe1(nested);
+            WithNullSafe2(nested);
             InFutureCSharp(nested);
         }
 
 
-        static void WithoutIfNotNull1(A input)
+        static void WithoutNullSafe(A input)
         {
             var value = input != null && input.Broccoli != null && input.Broccoli.Carrot != null 
                 ? (input.Broccoli.Carrot.Value + "asdfasdf")
@@ -36,9 +37,15 @@ namespace CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt
         }
 
 
-        static void WithIfNotNull2(A input)
+        static void WithNullSafe1(A input)
         {
-            input.IfNotNull(i => i.Broccoli).IfNotNull(b => b.Carrot).IfNotNull(c => c.Value).IfNotNull(v => v + "asdfasdf").Do(Console.WriteLine);
+            input.NullSafe(i => i.Broccoli).NullSafe(b => b.Carrot).NullSafe(c => c.Value).NullSafe(v => v + "asdfasdf").Do(Console.WriteLine);
+        }
+
+
+        static void WithNullSafe2(A input)
+        {
+            input.NullSafe(i => i.Broccoli, b => b.Carrot, c => c.Value, v => v + "asdfasdf").Do(Console.WriteLine);
         }
 
 

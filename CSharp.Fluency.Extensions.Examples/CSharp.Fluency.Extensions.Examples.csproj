@@ -46,7 +46,7 @@
     <Compile Include="Extensions\ObjectExt\CastAndAsExamples.cs" />
     <Compile Include="Patterns\PatternExamples.cs" />
     <Compile Include="Extensions\ObjectExt\PipeExamples.cs" />
-    <Compile Include="Extensions\ObjectExt\IfNotNullExamples.cs" />
+    <Compile Include="Extensions\ObjectExt\NullSafeExamples.cs" />
     <Compile Include="Extensions\ObjectExt\IfExamples.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
