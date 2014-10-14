@@ -56,9 +56,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSharp.Fluency.Extensions\CSharp.Fluency.Extensions.csproj">
+    <ProjectReference Include="..\Fluentatious\Fluentatious.csproj">
       <Project>{0ebd3889-ef94-4cc0-bff4-801c527f9429}</Project>
-      <Name>CSharp.Fluency.Extensions</Name>
+      <Name>Fluentatious</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
