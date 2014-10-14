@@ -100,11 +100,10 @@ readability, we could use Pipe!
      var blah = "horatio".Pipe(Bar, Foo, str => SomeMethod("dhdhdh", str), str => SomeMethod(str, "catatatat"), Compute)
     
 ---
-### Do / Tap (object extensions)
+### Do (object extensions)
 Do is inspired by the Underscore JS Tap function, of which Ruby also has an equivalent. It's actually quite 
 similar to Pipe with one important difference. Instead of piping the input into a Func and returning the result, 
-it performs any number of Actions on it in the order specified, and then returns the original object. Tap is 
-provided as an alias for Do.
+it performs any number of Actions on it in the order specified, and then returns the original object. 
 
 Do is intended to be fluent, but not necessarily functional. It's implied that any of the Actions can mutate 
 the input, although this isn't necessarily the case. Case in point... imagine you have this code and you want to 
@@ -116,9 +115,9 @@ print the result of Sum for debugging purposes.
         .Sum(str => str.Length)
         .Pipe(i => Math.Max(i, 7);
 
-Without Do/Tap, you'd split it like so:
+Without Do, you'd split it like so:
 
-    // Without Do/Tap
+    // Without Do
     var length = new[] { "go", "tuk", "hodor" }
         .Select(i => i + i)
         .Sum(str => str.Length);
@@ -129,14 +128,14 @@ Without Do/Tap, you'd split it like so:
     
 Annoying. For the price of copious of keystrokes, you've managed to cleave your nice method chain into three and
 introduce an unnecessary local var. All just to print the value of a variable. And then you have to clean up afterwards. 
-However, if you have a construct like Do/Tap, you can jump in an intercept the method chain to cleanly inject your 
-logging. Using Do / Tap:
+However, if you have a construct like Do / Tap, you can jump in an intercept the method chain to cleanly inject your 
+logging. Using Do:
 
-    // With Do / Tap
+    // With Do
     return new[] { "go", "tuk", "hodor" }
         .Select(i => i + i)
         .Sum(str => str.Length)
-        .Tap(Console.WriteLine)
+        .Do(Console.WriteLine)
         .Pipe(i => Math.Max(i, 7));
     
     
@@ -174,13 +173,14 @@ occurs.
 ### CastTo / As (object extensions)
 CastTo and As are pretty self-explanatory. They're simply method equivalents of intrinsic C# operators    
 
-// Without CastTo / As
-var result1 = Foo(Foo((string) Foo((string) Foo("horatio"))) as string);
-var result2 = ((string) ("horatio".Pipe(Foo))).Substring(1).ToLowerInvariant().Trim();
+    // Without CastTo / As
+    var result1 = Foo(Foo((string) Foo((string) Foo("horatio"))) as string);
+    var result2 = ((string) ("horatio".Pipe(Foo))).Substring(1).ToLowerInvariant().Trim();
         
-// With CastTo / As / Pipe
-var result1 = Foo("horatio").CastTo`<string>`().Pipe(Foo).CastTo`<string>`().Pipe(Foo).As`<string>`().Pipe(Foo);
-var result2 = "horatio".Pipe(Foo).CastTo`<string>`().Substring(1).ToLowerInvariant().Trim();
+    // With CastTo / As / Pipe
+
+    var result1 = Foo("horatio").CastTo`<string>`().Pipe(Foo).CastTo`<string>`().Pipe(Foo).As`<string>`().Pipe(Foo);
+    var result2 = "horatio".Pipe(Foo).CastTo`<string>`().Substring(1).ToLowerInvariant().Trim();
 
 ---
 ### Patterns

@@ -31,7 +31,7 @@ namespace Fluentatious.Examples.Extensions.ObjectExt
                 .Pipe(str => SomeMethod("dhdhdh", str))
                 .Pipe(str => SomeMethod(str, "catatatat"))
                 .Pipe(Compute)
-                .Tap(Console.WriteLine);
+                .Do(Console.WriteLine);
         }
 
 
@@ -39,7 +39,7 @@ namespace Fluentatious.Examples.Extensions.ObjectExt
         {
             var blah = "horatio"
                 .Pipe(Bar, Foo, str => SomeMethod("dhdhdh", str), str => SomeMethod(str, "catatatat"), Compute)
-                .Tap(Console.WriteLine);
+                .Do(Console.WriteLine);
         }
 
 

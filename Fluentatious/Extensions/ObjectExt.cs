@@ -90,6 +90,7 @@ namespace Fluentatious.Extensions
 
         #endregion
 
+
         #region IfElse/IfElseT methods
         
         /// <summary>
@@ -244,8 +245,7 @@ namespace Fluentatious.Extensions
 
         #endregion
 
-
-
+        
         #region NullSafe methods
 
         /// <summary>
@@ -376,18 +376,6 @@ namespace Fluentatious.Extensions
                 action(@this);
 
             return @this;
-        }
-
-
-        /// <summary>
-        /// Extension method
-        /// <para>
-        /// Alias of <see cref="Do{T}"/>
-        /// </para>
-        /// </summary>
-        public static T Tap<T>(this T @this, params Action<T>[] actions)
-        {
-            return @this.Do(actions);
         }
 
 
