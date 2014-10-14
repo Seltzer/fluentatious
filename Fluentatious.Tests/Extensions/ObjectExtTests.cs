@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSharp.Fluency.Extensions.Extensions;
+using Fluentatious.Extensions;
 using NUnit.Framework;
 
-namespace CSharp.Fluency.Extensions.Tests.Extensions
+namespace Fluentatious.Tests.Extensions
 {
 
     class ObjectExtTests

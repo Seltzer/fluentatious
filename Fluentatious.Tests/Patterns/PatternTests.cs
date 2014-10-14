@@ -1,9 +1,9 @@
 ﻿using System;
-using CSharp.Fluency.Extensions.Extensions;
-using CSharp.Fluency.Extensions.Patterns;
+using Fluentatious.Extensions;
+using Fluentatious.Patterns;
 using NUnit.Framework;
 
-namespace CSharp.Fluency.Extensions.Tests.Patterns
+namespace Fluentatious.Tests.Patterns
 {
 
     [TestFixture]

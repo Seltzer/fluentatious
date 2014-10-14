@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using CSharp.Fluency.Extensions.Examples.Extensions.ObjectExt;
-using CSharp.Fluency.Extensions.Examples.Patterns;
+using Fluentatious.Examples.Extensions.ObjectExt;
+using Fluentatious.Examples.Patterns;
 
-namespace CSharp.Fluency.Extensions.Examples
+namespace Fluentatious.Examples
 {
 
     class Program

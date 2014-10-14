@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CSharp.Fluency.Extensions.Tests
+namespace Fluentatious.Tests
 {
 
     public sealed class EquatableTestClass : IEquatable<EquatableTestClass>

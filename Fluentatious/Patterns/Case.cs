@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CSharp.Fluency.Extensions.Patterns
+namespace Fluentatious.Patterns
 {
 
     class Case<T, U>

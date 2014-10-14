@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace CSharp.Fluency.Extensions.Extensions
+namespace Fluentatious.Extensions
 {
 
     public static class ObjectExt

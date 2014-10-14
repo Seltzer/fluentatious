@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CSharp.Fluency.Extensions.Patterns
+namespace Fluentatious.Patterns
 {
     
     /// <summary>

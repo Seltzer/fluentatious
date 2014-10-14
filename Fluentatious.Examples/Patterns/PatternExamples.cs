@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSharp.Fluency.Extensions.Extensions;
-using CSharp.Fluency.Extensions.Patterns;
+using Fluentatious.Extensions;
+using Fluentatious.Patterns;
 
-namespace CSharp.Fluency.Extensions.Examples.Patterns
+namespace Fluentatious.Examples.Patterns
 {
 
     static class PatternExamples

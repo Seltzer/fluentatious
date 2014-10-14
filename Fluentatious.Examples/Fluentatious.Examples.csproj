@@ -7,8 +7,8 @@
     <ProjectGuid>{2A9595D9-338F-4D0C-9F43-3BA06428159F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSharp.Fluency.Extensions.Examples</RootNamespace>
-    <AssemblyName>CSharp.Fluency.Extensions.Examples</AssemblyName>
+    <RootNamespace>Fluentatious.Examples</RootNamespace>
+    <AssemblyName>Fluentatious.Examples</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

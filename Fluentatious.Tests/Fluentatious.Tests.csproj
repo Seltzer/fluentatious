@@ -7,8 +7,8 @@
     <ProjectGuid>{AD50E330-AC24-4609-9AA1-E7A50DAE5C8A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSharp.Fluency.Extensions.Tests</RootNamespace>
-    <AssemblyName>CSharp.Fluency.Extensions.Tests</AssemblyName>
+    <RootNamespace>Fluentatious.Tests</RootNamespace>
+    <AssemblyName>Fluentatious.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

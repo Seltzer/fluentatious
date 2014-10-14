@@ -7,8 +7,8 @@
     <ProjectGuid>{0EBD3889-EF94-4CC0-BFF4-801C527F9429}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSharp.Fluency.Extensions</RootNamespace>
-    <AssemblyName>CSharp.Fluency.Extensions</AssemblyName>
+    <RootNamespace>Fluentatious</RootNamespace>
+    <AssemblyName>Fluentatious</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

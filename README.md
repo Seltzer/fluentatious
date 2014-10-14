@@ -1,4 +1,4 @@
-csharp-fluency-extensions
+fluentatious
 =========================
 
 ## Motivation
@@ -7,7 +7,7 @@ and I find myself missing its functional and fluent nature whenever I'm writing 
 especially jarring when I'm force to depart from functional coding and intersperse bits of imperative code. So here
 are some of the fluent extensions / constructs which I've written in the past couple of years. 
 
-## What C# Fluency Extensions is:
+## What Fluentatious is:
 A library of object extensions and constructs which aim to make it easier to write fluent and functional C#, even when
 you're not working with LINQ. It aims to help you:
 * Achieve fluency - to have nice code which flows from left to right like a pipeline in point-free style. No visual
@@ -15,7 +15,7 @@ jumping around necessary.
 * Have fewer unnecessary local variables
 * Mutate variables less often
 
-## What C# Fluency Extensions isn't:
+## What Fluentatious isn't:
 * An attempt to turn C# into a functional language by emulating functional constructs such as option types,
 monads etc.
 * A framework to aid in writing fluent interfaces of your own.
