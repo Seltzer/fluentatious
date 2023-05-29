@@ -183,10 +183,7 @@ CastTo and As are pretty self-explanatory. They're simply method equivalents of 
     var result2 = "horatio".Pipe(Foo).CastTo`<string>`().Substring(1).ToLowerInvariant().Trim();
 
 ---
-### Patterns
-WARNING! Patterns are an elaborate feature I'm experimenting with at the moment. While I have used them in 
-production code, they're more of a toy at this stage, and I think they only lead to more readable code in a few cases. 
-
+### Patterns (WARNING! Experimental toy which leads to hilariously unreadable code)
 A Pattern (as in pattern matching) is essentially a fluent substitute for a series of if/then statements or a switch
 statement, whose branches all conditionally assign different values to a local var. It is essentially a series
 of ordered cases, where each case is composed of:
